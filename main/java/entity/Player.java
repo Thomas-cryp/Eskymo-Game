@@ -29,13 +29,16 @@ public class Player extends Entity{
         try{
             up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_up_1.png")));
             up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_up_2.png")));
+            upNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral_up.png")));
             down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_down_1.png")));
             down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_down_2.png")));
+            downNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral.png")));
             left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_left_1.png")));
             left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_left_2.png")));
+            leftNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral_left.png")));
             right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_right_1.png")));
             right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_right_2.png")));
-
+            rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral_right.png")));
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -45,6 +48,7 @@ public class Player extends Entity{
             if(keyH.upPressed){// move up
                 direction = "up";
                 y -= speed;
+
             }if(keyH.downPressed){ // move down
                 direction = "down";
                 y += speed;
@@ -65,7 +69,15 @@ public class Player extends Entity{
                 }
                 spriteCounter = 0;
             }
+        }else{
+            switch (direction){
+                case "up" -> direction = "neutralUp";
+                case "down" -> direction = "neutralDown";
+                case "right" -> direction = "neutralRight";
+                case "left" -> direction = "neutralLeft";
+            }
         }
+
 
     }
     public void draw(Graphics g2){
@@ -103,6 +115,12 @@ public class Player extends Entity{
                     image = right2;
                 }
             }
+            case "neutralUp" -> image = upNeutral;
+            case "neutralDown" -> image = downNeutral;
+            case "neutralRight" -> image = rightNeutral;
+            case "neutralLeft" -> image = leftNeutral;
+
+
         }
         g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
 
