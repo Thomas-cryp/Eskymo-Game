@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 public class TileManager {
     GamePanel gp;
@@ -18,22 +19,23 @@ public class TileManager {
         tile = new Tile[10];
         mapTileNumber = new int[gp.maxScreenColumn][gp.maxScreenRow];
         getTileImage();
-        loadMap();
+        loadMap("/blocks/map01.txt");
     }
     public void getTileImage(){
         try{
             tile[0] = new Tile();
-            tile[0].image = ImageIO.read(getClass().getResourceAsStream("/blocks/block_ice_picture.png"));
+            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/blocks/block_ice_picture.png")));
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(getClass().getResourceAsStream("/blocks/ezgif.com-crop.png"));
+            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/blocks/block_stone_picture.png")));
 
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-    public void loadMap(){
+    public void loadMap(String file){
         try{
-            InputStream is = getClass().getResourceAsStream("/blocks/map01.txt");
+            InputStream is = getClass().getResourceAsStream(file);
+            if (is == null) throw new AssertionError();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int column = 0;
@@ -42,7 +44,7 @@ public class TileManager {
                 String line = br.readLine();
 
                 while(column < gp.maxScreenColumn){
-                    String numbers[] = line.split(" ");
+                    String[] numbers = line.split(" ");
                     int num = Integer.parseInt(numbers[column]);
                     mapTileNumber[column][row] = num;
                     column ++;
@@ -55,7 +57,7 @@ public class TileManager {
             }
             br.close();
 
-        }catch(Exception e){
+        }catch(Exception ignored){
 
         }
     }
