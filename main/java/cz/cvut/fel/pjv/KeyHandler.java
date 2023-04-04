@@ -2,29 +2,36 @@ package cz.cvut.fel.pjv;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.logging.Logger;
 
 public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rightPressed;
 
+    private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+
         int code = e.getKeyCode();
 
         if(code == KeyEvent.VK_W){
+            LOGGER.info("Pressed W");
             upPressed = true;
         }
         if(code == KeyEvent.VK_S){
+            LOGGER.info("Pressed S");
             downPressed = true;
         }
         if(code == KeyEvent.VK_A){
+            LOGGER.info("Pressed A");
             leftPressed = true;
         }
         if(code == KeyEvent.VK_D){
+            LOGGER.info("Pressed D");
             rightPressed = true;
         }
     }
