@@ -10,10 +10,17 @@ public class Fight extends GamePanel {
     int currentHearts;
     int counterOfKills;
 
+    int playerX, playerY;
+    int enemyX, enemyY;
+
     public boolean checkEntityHearts(){
         return false;
     }
     public boolean spawnAlfaMonster(){  // it will be checked, if is time to spawn monster
+        return false;
+    }
+
+    public boolean checkPlayerPosition(int X, int Y){
         return false;
     }
 }

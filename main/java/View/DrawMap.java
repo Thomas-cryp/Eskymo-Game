@@ -1,6 +1,7 @@
 package View;
 
 import Controller.GamePanel;
+import Controller.TileManager;
 import Model.tile.LoadMap;
 import Model.tile.Tile;
 import Model.tile.TilesImport;
@@ -8,12 +9,16 @@ import Model.tile.TilesImport;
 import java.awt.*;
 import java.util.Objects;
 
-public class DrawMap extends TilesImport{
+public class DrawMap extends TileManager {
     GamePanel gp;
     LoadMap lm;
 
     TilesImport ti;
     Tile[] tile;
+
+    public DrawMap() {
+        super(null);
+    }
 
     public void draw(Graphics2D g2, GamePanel gp, int[][] mapTileNumber){
         this.gp = Objects.requireNonNull(gp, "Game Panel cannot be null");
