@@ -1,8 +1,9 @@
-package cz.cvut.fel.pjv;
+package Controller;
 
 import entity.Player;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -11,12 +12,16 @@ public class GamePanel extends JPanel implements Runnable{
     final int originalTitleSize = 16;   // 16x16 tile
     final int scale = 3;
     public final int tileSize = scale * originalTitleSize; // 48x48 tile, one tile
-    final int maxScreenColumn = 16;
-    final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenColumn; // 768 pixels
-    final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
+    public final int maxScreenColumn = 16;
+    public final int maxScreenRow = 12;
+    public final int screenWidth = tileSize * maxScreenColumn; // 768 pixels
+    public final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
     // FPS
     int FPS = 60;
+
+
+    TileManager tileM = new TileManager(this);
+
     KeyHandler keyH = new KeyHandler(); // instance KeyHandler from KeyHandler class
     Thread gameThread;
     Player player = new Player(this, keyH);
@@ -59,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable{
                 drawCount++;
             }
             if(timer >= 1000000000){    // it will print every second
-                System.out.println("FPS: " + drawCount);
+//                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -72,6 +77,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         super.paintComponent(g);    // super means panel class of this method (JPanel)
         Graphics2D g2 = (Graphics2D) g; // convert g to 2D
+        tileM.drawing(g2); // it has to be before player.draw
         player.draw(g2);
         g2.dispose();
     }

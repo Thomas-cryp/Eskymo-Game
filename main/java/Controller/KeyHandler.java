@@ -1,4 +1,4 @@
-package cz.cvut.fel.pjv;
+package Controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc;
 
     private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());
     @Override

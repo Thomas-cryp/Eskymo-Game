@@ -1,17 +1,21 @@
 package entity;
 
-import cz.cvut.fel.pjv.GamePanel;
-import cz.cvut.fel.pjv.KeyHandler;
+import Controller.GamePanel;
+import Controller.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
+
+    ArrayList inventory;
+
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -27,18 +31,18 @@ public class Player extends Entity{
     }
     public void getPlayerImage(){
         try{
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_up_1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_up_2.png")));
-            upNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral_up.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_down_1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_down_2.png")));
-            downNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_left_1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_left_2.png")));
-            leftNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral_left.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_right_1.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_right_2.png")));
-            rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo_neutral_right.png")));
+            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_1.png")));
+            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_2.png")));
+            upNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_up.png")));
+            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_down_1.png")));
+            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_down_2.png")));
+            downNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral.png")));
+            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_left_1.png")));
+            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_left_2.png")));
+            leftNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_left.png")));
+            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_1.png")));
+            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_2.png")));
+            rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_right.png")));
         }catch(IOException e){
             e.printStackTrace();
         }
