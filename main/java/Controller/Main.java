@@ -1,4 +1,4 @@
-package cz.cvut.fel.pjv;
+package Controller;
 
 import javax.swing.*;
 
@@ -7,7 +7,7 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // close the window when user click on close button
         window.setResizable(false); // set resizable of window on PC
-        window.setTitle("First 2D Game");   // game name
+        window.setTitle("Eskimo run");   // game name
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
