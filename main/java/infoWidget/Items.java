@@ -13,9 +13,11 @@ public class Items extends Player {
     String name;
     int positionOfDrops;
     public BufferedImage picture;
+    GamePanel gp;
+    KeyHandler keyH;
 
 
-    public Items(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+    public Items(GamePanel gp) {
+        super(gp);
     }
 }

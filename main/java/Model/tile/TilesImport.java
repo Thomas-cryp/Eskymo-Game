@@ -12,6 +12,7 @@ public class TilesImport extends Tile{
             tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/blocks/block_ice_picture.png")));
             tile[1] = new Tile();
             tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/blocks/block_stone_picture.png")));
+            tile[1].collision = true;
 
         }catch(Exception e){
             e.printStackTrace();

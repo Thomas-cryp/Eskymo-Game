@@ -9,20 +9,16 @@ import Model.tile.TilesImport;
 import java.awt.*;
 import java.util.Objects;
 
-public class DrawMap extends TileManager {
+public class DrawMap{
     GamePanel gp;
     LoadMap lm;
 
     TilesImport ti;
     Tile[] tile;
 
-    public DrawMap() {
-        super(null);
-    }
-
     public void draw(Graphics2D g2, GamePanel gp, int[][] mapTileNumber){
         this.gp = Objects.requireNonNull(gp, "Game Panel cannot be null");
-        lm = new LoadMap();
+        lm = new LoadMap(gp);
         ti = new TilesImport();
         tile = ti.getTileImage();
 

@@ -9,25 +9,29 @@ import View.DrawMap;
 import java.awt.*;
 
 
-public class TileManager extends GamePanel{
+public class TileManager{
         TilesImport ti;
         DrawMap drawMap = new DrawMap();
         LoadMap lm;
         GamePanel gp;
-        Tile[] tile;
+
+        public Tile[] tile;
         int[][] mapTileNumber;
 
-        public TileManager(GamePanel gp) {
+
+
+    public TileManager(GamePanel gp) {
             this.gp = gp;
             ti = new TilesImport();
-            lm = new LoadMap();
-            lm.loadMap("/blocks/map01.txt", gp);
+            lm = new LoadMap(gp);
+            lm.loadMap("/blocks/map01.txt");
             tile = ti.getTileImage();
         }
         public void drawing(Graphics2D g2){
             mapTileNumber = lm.getMapTileNumber();
             drawMap.draw(g2, gp, mapTileNumber);
         }
-    }
+
+}
 
 

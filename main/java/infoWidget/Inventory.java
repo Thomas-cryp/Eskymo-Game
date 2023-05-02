@@ -10,8 +10,11 @@ public class Inventory extends Items{
     Coins coins;
     Hearts hearts;
 
-    public Inventory(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+
+    public Inventory(GamePanel gp) {
+        super(gp);
+
+
     }
 
     public void openInventory(){}

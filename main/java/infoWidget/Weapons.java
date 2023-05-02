@@ -9,9 +9,12 @@ public class Weapons extends Items{
     ArrayList weapons;
     int damage;
     String type;
+    GamePanel gp;
+    KeyHandler keyH;
 
-    public Weapons(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+    public Weapons(GamePanel gp) {
+
+        super(gp);
     }
     public int getActualWeapon(){
         return 0;

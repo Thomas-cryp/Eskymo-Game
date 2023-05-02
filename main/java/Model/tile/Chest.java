@@ -11,7 +11,7 @@ public class Chest extends Weapons {
     GamePanel gp;
     Igloo igloo;
 
-    KeyHandler kh;
+    KeyHandler keyH;
     Coins coins;
 
    private ArrayList weaponsList;
@@ -20,8 +20,8 @@ public class Chest extends Weapons {
         return weaponsList;
     }
 
-    public Chest(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+    public Chest(GamePanel gp) {
+        super(gp);
     }
 
     public void openChest(){}

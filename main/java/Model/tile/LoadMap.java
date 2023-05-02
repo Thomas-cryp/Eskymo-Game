@@ -2,21 +2,24 @@ package Model.tile;
 
 import Controller.GamePanel;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Objects;
 
-public class LoadMap extends GamePanel{
+
+public class LoadMap{
     GamePanel gp;
     private int[][] mapTileNumber;
+    public LoadMap(GamePanel gp) {
+        this.gp = gp;
 
-    public void loadMap(String file, GamePanel gp){
+    }
+    public void loadMap(String file){
 
-        this.gp = Objects.requireNonNull(gp, "Game Panel cannot be null");
         mapTileNumber = new int[gp.maxScreenColumn][gp.maxScreenRow];
 
-        try{
-        InputStream is = getClass().getResourceAsStream(file);
+        try(InputStream is = getClass().getResourceAsStream(file)){
+
         if (is == null) throw new AssertionError();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -40,8 +43,8 @@ public class LoadMap extends GamePanel{
         }
         br.close();
 
-    }catch(Exception ignored){
-
+    }catch(IOException e){
+        throw new RuntimeException(e);
     }
     }
     public int[][] getMapTileNumber() {

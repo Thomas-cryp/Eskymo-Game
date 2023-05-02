@@ -10,8 +10,11 @@ public class InfoBar extends Player{
     int heartsStatus;
     int coinsStatus;
 
-    public InfoBar(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+    GamePanel gp;
+    KeyHandler keyH;
+
+    public InfoBar(GamePanel gp) {
+        super(gp);
     }
 
 

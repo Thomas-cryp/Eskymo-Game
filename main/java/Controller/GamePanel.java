@@ -1,10 +1,15 @@
 package Controller;
 
+import entity.Collision;
+import entity.Enemy;
+import entity.Entity;
 import entity.Player;
 
 import javax.swing.*;
 
 import java.awt.*;
+import java.sql.Time;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -20,21 +25,77 @@ public class GamePanel extends JPanel implements Runnable{
     int FPS = 60;
 
 
-    TileManager tileM = new TileManager(this);
 
+    // SET ENEMY
+    private int numberOfEnemyInLevel = 2;   // TODO getter and setter
+    private ArrayList<Enemy> enemies = new ArrayList<>();
+
+    private int[][] enemyPositions;
+
+
+
+    private Player player;
+    private TileManager tileM;
+    private Collision collision;
     KeyHandler keyH = new KeyHandler(); // instance KeyHandler from KeyHandler class
     Thread gameThread;
-    Player player = new Player(this, keyH);
 
+
+
+    //    StartAndUpdate startAndUpdate;
     // constructor
     public GamePanel(){
+
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));    // size of the panel
         this.setBackground(Color.BLACK);    // background color of the panel
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
-        this.setFocusable(true);    // GamePanel can be focused to receive key input
+        this.setFocusable(true);// GamePanel can be focused to receive key input
+        player = new Player(this);
+        player.setKeyHandler(keyH);
+        tileM = new TileManager(this);
+
+        setPositionOfEnemyToDoubleArray();
+
+        collision = new Collision(this, player);
+        // create the StartAndUpdate instance and pass the Player and TileManager instances to its constructor
+//        startAndUpdate = new StartAndUpdate(player, tileM);
+    }
+    public void setPositionOfEnemyToDoubleArray(){
+        enemyPositions = new int[numberOfEnemyInLevel][2];
+        enemyPositions[0][0] = 400;
+        enemyPositions[0][1] = 200;
+        enemyPositions[1][0] = 300;
+        enemyPositions[1][1] = 400;
+        setEnemyList();
+    }
+    public void setEnemyList(){
+        int row = 0;
+        int counter = 1;
+        for (int i = 0; i < numberOfEnemyInLevel; i++) {
+            if(counter == 1){
+                int x = enemyPositions[row][0];
+
+                int y = enemyPositions[row][1];
+                Enemy enemy = new Enemy(this, player);
+                enemy.setPositionEnemy(x, y);
+//                enemy.setKeyHandler(keyH);
+                enemies.add(enemy);
+                counter = 2;
+            }else{
+                int x = enemyPositions[row][0];
+                int y = enemyPositions[row][1];
+                Enemy enemy = new Enemy(this, player);
+                enemy.setPositionEnemy(x, y);
+                enemies.add(enemy);
+                counter = 1;
+            }
+            row ++;
+
+        }
     }
     public void startGameThread(){
+
         gameThread = new Thread(this);  // we are passing GamePanel to this constructor
         gameThread.start(); // it will call run method
     }
@@ -43,12 +104,12 @@ public class GamePanel extends JPanel implements Runnable{
     // using Delta/Accumulator method
     @Override
     public void run() {
-        double drawInterval = 1000000000/FPS;
+        double drawInterval = (double) 1000000000 /FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
-        int drawCount = 0;
+
 
         while(gameThread != null){  // it will repeat the process as long as this gameThread (method startGameThread) exists
             currentTime = System.nanoTime();
@@ -61,24 +122,31 @@ public class GamePanel extends JPanel implements Runnable{
                 update();   // Draw the screen with the updated info
                 repaint();  // it will call paintComponent method
                 delta--;
-                drawCount++;
+
             }
             if(timer >= 1000000000){    // it will print every second
 //                System.out.println("FPS: " + drawCount);
-                drawCount = 0;
+
                 timer = 0;
             }
         }
     }
     public void update(){
         player.update();    //call method for update game
+        for (Enemy enemy : enemies) {
+            enemy.update();
+        }
     }
-    public  void paintComponent(Graphics g){
 
+    public  void paintComponent(Graphics g){
         super.paintComponent(g);    // super means panel class of this method (JPanel)
         Graphics2D g2 = (Graphics2D) g; // convert g to 2D
         tileM.drawing(g2); // it has to be before player.draw
+        for (Enemy enemy : enemies) {
+            enemy.draw(g2);
+        }
         player.draw(g2);
         g2.dispose();
     }
+
 }

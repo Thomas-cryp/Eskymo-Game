@@ -7,7 +7,9 @@ public class Igloo extends Tile{
     GamePanel gp;
     LoadMap lm;
 
-
+    public Igloo() {
+        this.gp = new GamePanel();
+    }
 
     public void setIgloo(){}
     public void getIglooImage(){}

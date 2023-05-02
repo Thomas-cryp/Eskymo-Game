@@ -8,7 +8,7 @@ public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc;
 
-    private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());
+//    private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());  TODO
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -19,20 +19,24 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if(code == KeyEvent.VK_W){
-            LOGGER.info("Pressed W");
+//            LOGGER.info("Pressed W");
             upPressed = true;
         }
         if(code == KeyEvent.VK_S){
-            LOGGER.info("Pressed S");
+//            LOGGER.info("Pressed S");
             downPressed = true;
         }
         if(code == KeyEvent.VK_A){
-            LOGGER.info("Pressed A");
+//            LOGGER.info("Pressed A");
             leftPressed = true;
         }
         if(code == KeyEvent.VK_D){
-            LOGGER.info("Pressed D");
+//            LOGGER.info("Pressed D");
             rightPressed = true;
+        }
+        if(code == KeyEvent.VK_K){
+//            LOGGER.info("Pressed K");
+            fight = true;
         }
     }
 

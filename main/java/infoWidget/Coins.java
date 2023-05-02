@@ -6,6 +6,8 @@ import Controller.KeyHandler;
 
 public class Coins extends Items{
     private int counter;
+    GamePanel gp;
+    KeyHandler keyH;
 
     public int getCounter() {
         return counter;
@@ -15,7 +17,7 @@ public class Coins extends Items{
         this.counter = counter;
     }
 
-    public Coins(GamePanel gp, KeyHandler keyH) {
-        super(gp, keyH);
+    public Coins(GamePanel gp) {
+        super(gp);
     }
 }
