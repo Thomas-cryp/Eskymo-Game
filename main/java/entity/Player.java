@@ -19,11 +19,31 @@ public class Player extends Entity{
     Collision collisionChecker;
     Fight fight;
     Hearts hearts;
+    private boolean attackByEnemy = false;
+    private String fakeDirectionInAttack;   //TODO better in Entity class
+    private int timerToAttackByEnemy = 0;
+
+    public boolean isAttackByEnemy() {
+        return attackByEnemy;
+    }
+
+    public void setAttackByEnemy(boolean attackByEnemy) {
+        this.attackByEnemy = attackByEnemy;
+    }
 
     private int x;
     private int y;
     private boolean isFight;
 
+    public int getTimerToAttackKey() {
+        return timerToAttackKey;
+    }
+
+    public void setTimerToAttackKey(int timerToAttackKey) {
+        this.timerToAttackKey = timerToAttackKey;
+    }
+
+    private int timerToAttackKey = 60;
 
 
     public Player(GamePanel gp) {
@@ -51,6 +71,7 @@ public class Player extends Entity{
         y = 100;
         speed = 4;
         direction = "down";
+
         actualHearts = new int[4];
         hearts.getLengthOfHeartsAndSetArray(actualHearts.length);
     }
@@ -74,7 +95,41 @@ public class Player extends Entity{
         }
     }
     public void update(){
-        if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){    // it pretends moving in stay position of character
+        timerToAttackKey ++;
+
+        if(attackByEnemy){
+            timerToAttackKey ++;
+            if(timerToAttackKey == 30){
+                attackByEnemy = false;
+                timerToAttackKey = 0;
+                fakeDirectionInAttack = null;
+            }else{
+                collision = false;
+                collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
+
+                if(!collision){
+                    switch (direction){
+                        case "up", "neutralUp" -> {
+                            y += speed;
+                            fakeDirectionInAttack = "down";
+                        }
+                        case "down", "neutralDown" -> {
+                            y -= speed;
+                            fakeDirectionInAttack = "up";
+                        }
+                        case "left", "neutralLeft" -> {
+                            x += speed;
+                            fakeDirectionInAttack = "right";
+                        }
+                        case "right", "neutralRight" -> {
+                            x -= speed;
+                            fakeDirectionInAttack = "left";
+                        }
+                    }
+                }
+            }
+        }
+        else if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){    // it pretends moving in stay position of character
 
             if(keyH.upPressed){// move up
                 direction = "up";
@@ -91,25 +146,18 @@ public class Player extends Entity{
 
             // collision
             collision = false;
-            collisionChecker.checkMapPosition(this);
+            collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
 
-            if(collision == false){
-                switch (direction){
-                    case "up":
-                        y -= speed;
-                        break;
-                    case "down":
-                        y += speed;
-                        break;
-                    case "left":
-                        x -= speed;
-                        break;
-                    case "right":
-                        x += speed;
-                        break;
+            if(!collision){
+                switch (direction) {
+                    case "up" -> y -= speed;
+                    case "down" -> y += speed;
+                    case "left" -> x -= speed;
+                    case "right" -> x += speed;
                 }
 
             }
+
             spriteCounter++;    // 60 times par second is called this method. Every 13 frames will be changed the picture
             if(spriteCounter > 13){
                 if(spriteNum == 1){

@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 public class Entity{
 
-    public int x,y;
     public int speed;
     public int[] actualHearts;
     public BufferedImage up1, up2, upNeutral, down1, down2, downNeutral, left1, left2, leftNeutral, right1, right2, rightNeutral, iceAfterHit;

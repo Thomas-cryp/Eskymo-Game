@@ -5,8 +5,8 @@ import Controller.KeyHandler;
 import View.DrawEntity;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -16,9 +16,19 @@ public class Enemy extends Entity{
     DrawEntity drawEntity;
     KeyHandler keyH;
     Player player;
+    Fight fight;
 
-    int damage;
-    boolean death = false;
+    private int damage = 0;
+    private boolean death = false;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     private int x = 400;
     private int y = 400;
 
@@ -30,17 +40,17 @@ public class Enemy extends Entity{
     private int counterOfFreezeTime = 0;
 
 
+
+
     public Enemy(GamePanel gp, Player player) {
         this.player = player;
         this.gp = gp;
         this.drawEntity = new DrawEntity(gp);
         this.keyH = player.keyH;
+        this.fight = new Fight(gp, player, this);
         setDefaultValuesEnemy();
         getEnemyImage();
     }
-//    public void setKeyHandler(KeyHandler keyHandler) {
-//        kh = keyHandler;
-//    }
 
     public void getEnemyImage(){
         try{
@@ -80,6 +90,7 @@ public class Enemy extends Entity{
     }
 
     public double calculateHypotenuse(){
+
         setPlayerPosition();
         double distancePlayerAndEnemy;
         double b = x - playerX;
@@ -88,59 +99,81 @@ public class Enemy extends Entity{
         return distancePlayerAndEnemy;
 
     }
+
+    public boolean timerToAttackKey(){
+        if(player.getTimerToAttackKey() >= 20){
+            player.setTimerToAttackKey(0);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 //    public int addDamage(){ TODO
 //        return 0;
 //    }
     public boolean checkFightKeyPressed(){
-        if(keyH.fight){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    public boolean checkIfFightIsPossible(){
-        if(calculateHypotenuse() < 30){
-            return true;
-        }else{
-            return false;
-        }
+        return keyH.fight;
     }
 
     public void update(){
-        if(checkFightKeyPressed() && checkIfFightIsPossible()){
-        isFight = true;
+
+        if(damage == 3){
+//            JOptionPane.showMessageDialog(null, "Death of first enemy");
+            death = true;
         }
-        if(isFight == true){
-            counterOfFreezeTime ++;
-            if(counterOfFreezeTime == 30){
-                isFight = false;
-                counterOfFreezeTime = 0;
+
+        if(!death){
+            if(calculateHypotenuse() < 30){
+                if(checkFightKeyPressed()){
+                    keyH.fight = false;
+                    if(timerToAttackKey()){
+                        if(fight.checkPlayerOrienting()){
+                            if(!isFight){
+                                player.setAttackByEnemy(true);
+                                isFight = true;
+                                damage ++;
+                            }
+                        }
+                    }
+                }
             }
 
-        } else if (calculateHypotenuse() < 150){
-            setPlayerPosition();
-            double dx = playerX - x;
-            double dy = playerY - y;
-            double angle = Math.atan2(dy, dx);
 
-            x += speed * Math.cos(angle);
-            y += speed * Math.sin(angle);
-            updateImageMoving(dx, dy);
-        } else if (Math.abs(x - defaultX) <= toleranceForEnemyDefaultBack && Math.abs(y - defaultY) <= toleranceForEnemyDefaultBack) {
-            updateEnemyImageOnDefaultValues();
-        }else if (x != defaultX || y != defaultY) {
+            if(isFight){
+                counterOfFreezeTime ++;
+                if(counterOfFreezeTime >= 120){
+                    isFight = false;
+                    counterOfFreezeTime = 0;
+                }
 
-            double dx = defaultX - x;
-            double dy = defaultY - y;
-            double angle = Math.atan2(dy, dx);
+            } else if (calculateHypotenuse() < 150){
+                setPlayerPosition();
+                moveShortestPath(playerX, playerY);
 
-            x += speed * Math.cos(angle);
-            y += speed * Math.sin(angle);
-            updateImageMoving(dx, dy);
+            } else if (Math.abs(x - defaultX) <= toleranceForEnemyDefaultBack && Math.abs(y - defaultY) <= toleranceForEnemyDefaultBack) {
+                updateEnemyImageOnDefaultValues();
+
+            }else if (x != defaultX || y != defaultY) {
+                moveShortestPath(defaultX, defaultY);
+            }
+            else{
+                updateImageStanding();
+            }
+        }else{
+            direction = "death";
         }
-        else{
-            updateImageStanding();
-        }
+
+    }
+    public void moveShortestPath(int targetX, int targetY){
+        double dx = targetX - x;
+        double dy = targetY - y;
+        double angle = Math.atan2(dy, dx);
+
+        x += speed * Math.cos(angle);
+        y += speed * Math.sin(angle);
+        updateImageMoving(dx, dy);
     }
 
     public void updateImageMoving(double dx, double dy){
@@ -160,6 +193,7 @@ public class Enemy extends Entity{
                 direction = "up";
             }
         }
+
         spriteCounter++;    // 60 times par second is called this method. Every 13 frames will be changed the picture
         if(spriteCounter > 13){
             if(spriteNum == 1){
@@ -171,12 +205,10 @@ public class Enemy extends Entity{
             spriteCounter = 0;
         }
     }
+
     public void updateEnemyImageOnDefaultValues(){
         switch (direction){
-            case "up" -> direction = "neutralDown";
-            case "down" -> direction = "neutralDown";
-            case "right" -> direction = "neutralDown";
-            case "left" -> direction = "neutralDown";
+            case "up", "down", "right", "left" -> direction = "neutralDown";
         }
     }
     public void updateImageStanding(){

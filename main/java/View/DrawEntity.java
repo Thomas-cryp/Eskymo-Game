@@ -48,6 +48,9 @@ public class DrawEntity {
                     image = right2;
                 }
             }
+            case "death" -> {
+                image = iceAfterHit;
+            }
             case "neutralUp" -> image = upNeutral;
             case "neutralDown" -> image = downNeutral;
             case "neutralRight" -> image = rightNeutral;
