@@ -29,6 +29,7 @@ public class DrawLiveBar {
         BufferedImage image;
         int x = 0;
         int y = 0;
+
         for (int i:
              actualArrayOfHearts) {
             if(i == 2){

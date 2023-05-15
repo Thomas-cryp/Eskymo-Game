@@ -1,5 +1,6 @@
 package Controller;
 
+import View.UI;
 import entity.Collision;
 import entity.Enemy;
 import entity.Entity;
@@ -33,14 +34,35 @@ public class GamePanel extends JPanel implements Runnable{
     private int[][] enemyPositions;
 
 
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
 
     private Player player;
     private TileManager tileM;
     private Collision collision;
-    KeyHandler keyH = new KeyHandler(); // instance KeyHandler from KeyHandler class
+    KeyHandler keyH = new KeyHandler(this); // instance KeyHandler from KeyHandler class
     Thread gameThread;
 
+    UI ui;
+    private int gameState;
+    private int pauseState = 2;
+    private int playState = 1;
 
+    public int getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(int gameState) {
+        this.gameState = gameState;
+    }
+
+    public int getPauseState() {
+        return pauseState;
+    }
+    public int getPlayState() {
+        return playState;
+    }
 
     //    StartAndUpdate startAndUpdate;
     // constructor
@@ -54,13 +76,14 @@ public class GamePanel extends JPanel implements Runnable{
         player = new Player(this);
         player.setKeyHandler(keyH);
         tileM = new TileManager(this);
-
+        ui = new UI(this);
         setPositionOfEnemyToDoubleArray();
 
         collision = new Collision(this, player);
         // create the StartAndUpdate instance and pass the Player and TileManager instances to its constructor
 //        startAndUpdate = new StartAndUpdate(player, tileM);
     }
+
     public void setPositionOfEnemyToDoubleArray(){
         enemyPositions = new int[numberOfEnemyInLevel][2];
         enemyPositions[0][0] = 400;
@@ -95,7 +118,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
     public void startGameThread(){
-
+        gameState = playState;
         gameThread = new Thread(this);  // we are passing GamePanel to this constructor
         gameThread.start(); // it will call run method
     }
@@ -132,19 +155,25 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
     public void update(){
-        player.update();    //call method for update game
-        for (Enemy enemy : enemies) {
-            enemy.update();
+        if(gameState == playState){
+            player.update();    //call method for update game
+            for (Enemy enemy : enemies) {
+                enemy.update();
+            }
+        }else{
+
         }
+
     }
 
-    public  void paintComponent(Graphics g){
+    public void paintComponent(Graphics g){
         super.paintComponent(g);    // super means panel class of this method (JPanel)
         Graphics2D g2 = (Graphics2D) g; // convert g to 2D
         tileM.drawing(g2); // it has to be before player.draw
         for (Enemy enemy : enemies) {
             enemy.draw(g2);
         }
+        ui.draw(g2);
         player.draw(g2);
         g2.dispose();
     }

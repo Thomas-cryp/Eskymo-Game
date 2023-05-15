@@ -28,6 +28,25 @@ public class Hearts{ // TODO extends ITEM
         actualHeartsArray = new int[defaultLengthOfArray];
         Arrays.fill(actualHeartsArray, 2);
     }
+    public void decreaseNumberOfHearts(){
+        int indexInArray = -1;
+//        for (int i:
+//             actualHeartsArray) {
+//            System.out.println(i);
+//        }
+        for (int i:
+             actualHeartsArray) {
+            indexInArray ++;
+            if(i == 1){
+                actualHeartsArray[indexInArray] = 0;
+                break;
+            }
+            if(i == 2){
+                actualHeartsArray[indexInArray] = 1;
+                break;
+            }
+        }
+    }
 
     public void draw(Graphics g2){
         drawLiveBar.draw(g2, actualHeartsArray);

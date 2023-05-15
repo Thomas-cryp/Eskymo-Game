@@ -3,11 +3,13 @@ package entity;
 import Controller.GamePanel;
 import Controller.KeyHandler;
 import View.DrawEntity;
+import infoWidget.Weapons;
 
 import javax.imageio.ImageIO;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Objects;
 
 
@@ -17,8 +19,18 @@ public class Enemy extends Entity{
     KeyHandler keyH;
     Player player;
     Fight fight;
+    Weapons weapons;
 
     private int damage = 0;
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
     private boolean death = false;
 
     public int getX() {
@@ -37,9 +49,16 @@ public class Enemy extends Entity{
     private int playerX, playerY;
     int toleranceForEnemyDefaultBack = 3;
     private boolean isFight;
+
+    public void setFight(boolean fight) {
+        isFight = fight;
+    }
+
     private int counterOfFreezeTime = 0;
+    private boolean hittingByEnemy = false;
 
-
+    private int timerForStandingAfterHitPlayer;
+    private int counterOfSlowestFrames = 30;
 
 
     public Enemy(GamePanel gp, Player player) {
@@ -48,6 +67,7 @@ public class Enemy extends Entity{
         this.drawEntity = new DrawEntity(gp);
         this.keyH = player.keyH;
         this.fight = new Fight(gp, player, this);
+        this.weapons = new Weapons(gp);
         setDefaultValuesEnemy();
         getEnemyImage();
     }
@@ -66,7 +86,7 @@ public class Enemy extends Entity{
             right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_1.png")));
             right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_2.png")));
             rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_right.png")));
-            iceAfterHit = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/iceAfterHit/ezgif.com-crop.png")));
+            iceAfterHit = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/iceAfterHit/iceAfterHitPicture.png")));
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -90,18 +110,24 @@ public class Enemy extends Entity{
     }
 
     public double calculateHypotenuse(){
-
         setPlayerPosition();
         double distancePlayerAndEnemy;
         double b = x - playerX;
         double a = y - playerY;
         distancePlayerAndEnemy = Math.sqrt(b * b + a * a);
         return distancePlayerAndEnemy;
+    }
+    public double calculateHypotenuseForTrap(int xWeapon, int yWeapon){
+        double distancePlayerAndEnemy;
+        double b = x - xWeapon;
+        double a = y - yWeapon;
+        distancePlayerAndEnemy = Math.sqrt(b * b + a * a);
+        return distancePlayerAndEnemy;
 
     }
 
     public boolean timerToAttackKey(){
-        if(player.getTimerToAttackKey() >= 20){
+        if(player.getTimerToAttackKey() >= 60){
             player.setTimerToAttackKey(0);
             return true;
         }else{
@@ -116,6 +142,15 @@ public class Enemy extends Entity{
     public boolean checkFightKeyPressed(){
         return keyH.fight;
     }
+    public boolean timerAfterAttackPlayerByEnemy(){
+        counterOfSlowestFrames ++;
+        if(counterOfSlowestFrames >= 30){
+            counterOfSlowestFrames = 0;
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     public void update(){
 
@@ -124,41 +159,49 @@ public class Enemy extends Entity{
             death = true;
         }
 
-        if(!death){
-            if(calculateHypotenuse() < 30){
-                if(checkFightKeyPressed()){
-                    keyH.fight = false;
-                    if(timerToAttackKey()){
-                        if(fight.checkPlayerOrienting()){
-                            if(!isFight){
-                                player.setAttackByEnemy(true);
-                                isFight = true;
-                                damage ++;
-                            }
-                        }
+        if(!death) {
+            if (calculateHypotenuse() < 300 && checkFightKeyPressed()) {
+                keyH.fight = false;
+
+                if (timerToAttackKey() && !isFight) {
+                    if(weapons.isSword()){
+                        fight.swordFight(this);
+                    } else if (weapons.isBow()) {
+                        fight.bowFight();
+                    }else{
+                        fight.trapsFight();
                     }
                 }
+            } else if (calculateHypotenuse() < 20 && timerAfterAttackPlayerByEnemy()) {
+                player.setAttackByEnemy(true);
+                hittingByEnemy = true;
+                player.callHeartsClassAndDecreaseNumberOfHearts();
             }
 
 
-            if(isFight){
-                counterOfFreezeTime ++;
-                if(counterOfFreezeTime >= 120){
+            if (isFight) {
+                counterOfFreezeTime++;
+                if (counterOfFreezeTime >= 120) {
                     isFight = false;
                     counterOfFreezeTime = 0;
                 }
-
-            } else if (calculateHypotenuse() < 150){
+            } else if (hittingByEnemy) {
+                if (timerForStandingAfterHitPlayer == 30) {
+                    hittingByEnemy = false;
+                    timerForStandingAfterHitPlayer = 0;
+                }
+                timerForStandingAfterHitPlayer++;
+                updateImageStanding();
+            } else if (calculateHypotenuse() < 150) {
                 setPlayerPosition();
                 moveShortestPath(playerX, playerY);
 
             } else if (Math.abs(x - defaultX) <= toleranceForEnemyDefaultBack && Math.abs(y - defaultY) <= toleranceForEnemyDefaultBack) {
                 updateEnemyImageOnDefaultValues();
 
-            }else if (x != defaultX || y != defaultY) {
+            } else if (x != defaultX || y != defaultY) {
                 moveShortestPath(defaultX, defaultY);
-            }
-            else{
+            } else {
                 updateImageStanding();
             }
         }else{

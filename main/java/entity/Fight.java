@@ -1,27 +1,21 @@
 package entity;
 
 import Controller.GamePanel;
+import View.DrawWeapon;
+import infoWidget.Weapons;
 
 public class Fight{
     GamePanel gp;
     Player player;
     Enemy enemy;
-
-//    int heartsOnStart;
-//    int currentHearts;
-//    int counterOfKills;
-//    private double distancePlayerAndEnemy;
-//    int playerX, playerY;
-//    int enemyX, enemyY;
+    Weapons weapons;
 
     public Fight(GamePanel gp, Player player, Enemy enemy) {
         this.gp = gp;
         this.player = player;
         this.enemy = enemy;
-
-
+        this.weapons = new Weapons(gp);
     }
-
     public boolean checkPlayerOrienting(){
         switch (player.direction){
             case "up":
@@ -47,8 +41,23 @@ public class Fight{
         }
         return false;
     }
-
-
+    public void increaseDamageAndSetFightBooleanValue(Enemy enemy){
+        int damage = enemy.getDamage();
+        damage ++;
+        enemy.setDamage(damage);
+        enemy.setFight(true);
+    }
+    public void swordFight(Enemy enemy){
+        if(checkPlayerOrienting()){
+            increaseDamageAndSetFightBooleanValue(enemy);
+        }
+    }
+    public void bowFight(){
+        player.arrowIsFlying = true;
+    }
+    public void trapsFight(){
+        player.arrowIsFlying = true;
+    }
 
 
     public boolean checkEntityHearts(){
@@ -61,4 +70,6 @@ public class Fight{
     public boolean checkPlayerPosition(int X, int Y){
         return false;
     }
+
+
 }

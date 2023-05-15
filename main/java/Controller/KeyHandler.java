@@ -6,9 +6,15 @@ import java.util.logging.Logger;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc, pause;
 
 //    private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());  TODO
+    GamePanel gp;
+
+    public KeyHandler(GamePanel gp) {
+        this.gp = gp;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -37,6 +43,14 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_K){
 //            LOGGER.info("Pressed K");
             fight = true;
+        }
+        if(code == KeyEvent.VK_P){
+//            LOGGER.info("Pressed P");
+            if(gp.getGameState() == gp.getPlayState()){
+                gp.setGameState(gp.getPauseState());
+            } else if (gp.getGameState() == gp.getPauseState()) {
+                gp.setGameState(gp.getPlayState());
+            }
         }
     }
 

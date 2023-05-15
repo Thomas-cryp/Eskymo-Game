@@ -3,7 +3,9 @@ package entity;
 import Controller.GamePanel;
 import Controller.KeyHandler;
 import View.DrawEntity;
+import View.DrawWeapon;
 import infoWidget.Hearts;
+import infoWidget.Weapons;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,11 +19,12 @@ public class Player extends Entity{
     KeyHandler keyH;
     DrawEntity drawEntity;
     Collision collisionChecker;
-    Fight fight;
+
     Hearts hearts;
+    Weapons weapons;
     private boolean attackByEnemy = false;
     private String fakeDirectionInAttack;   //TODO better in Entity class
-    private int timerToAttackByEnemy = 0;
+    private int timerToAttackByEnemy;
 
     public boolean isAttackByEnemy() {
         return attackByEnemy;
@@ -33,7 +36,9 @@ public class Player extends Entity{
 
     private int x;
     private int y;
-    private boolean isFight;
+    boolean isFight;
+    private int timerForMovingBack;
+    public boolean arrowIsFlying = false;
 
     public int getTimerToAttackKey() {
         return timerToAttackKey;
@@ -45,16 +50,14 @@ public class Player extends Entity{
 
     private int timerToAttackKey = 60;
 
-
     public Player(GamePanel gp) {
         this.gp = gp;
-
         solidArea = new Rectangle();
         solidArea.x = 8;
         solidArea.y = 16;
         solidArea.width = 32;
         solidArea.height = 32;
-
+        this.weapons = new Weapons(gp);
         this.hearts = new Hearts(gp);
         this.collisionChecker = new Collision(gp, this);
         this.drawEntity = new DrawEntity(gp);
@@ -62,6 +65,9 @@ public class Player extends Entity{
         setDefaultValues();
         getPlayerImage();
 
+    }
+    public void callHeartsClassAndDecreaseNumberOfHearts(){
+        hearts.decreaseNumberOfHearts();
     }
     public void setKeyHandler(KeyHandler keyHandler) {
         keyH = keyHandler;
@@ -74,7 +80,9 @@ public class Player extends Entity{
 
         actualHearts = new int[4];
         hearts.getLengthOfHeartsAndSetArray(actualHearts.length);
+        weapons.setDefaultValuesOfWeapons();
     }
+
     public void getPlayerImage(){
         try{
             up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_1.png")));
@@ -89,19 +97,19 @@ public class Player extends Entity{
             right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_1.png")));
             right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_2.png")));
             rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_right.png")));
-            iceAfterHit = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/iceAfterHit/ezgif.com-crop.png")));
+            iceAfterHit = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/iceAfterHit/iceAfterHitPicture.png")));
         }catch(IOException e){
             e.printStackTrace();
         }
     }
+
     public void update(){
         timerToAttackKey ++;
-
         if(attackByEnemy){
-            timerToAttackKey ++;
-            if(timerToAttackKey == 30){
+            timerForMovingBack ++;
+            if(timerForMovingBack >= 30){
                 attackByEnemy = false;
-                timerToAttackKey = 0;
+                timerForMovingBack = 0;
                 fakeDirectionInAttack = null;
             }else{
                 collision = false;
@@ -181,6 +189,7 @@ public class Player extends Entity{
     }
     public void draw(Graphics g2){
         drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, x, y);
+        weapons.draw(g2, x, y, direction, arrowIsFlying, this);
         hearts.draw(g2);
     }
     public int getX() {
