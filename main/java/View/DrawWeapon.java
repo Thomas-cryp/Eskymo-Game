@@ -2,7 +2,7 @@ package View;
 
 import Controller.GamePanel;
 import entity.Enemy;
-import entity.Fight;
+
 import entity.Player;
 import infoWidget.Weapons;
 
@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class DrawWeapon {
@@ -103,7 +102,7 @@ public class DrawWeapon {
                 checkerForCollisionEnemyWithArray(directionOfArrow, player);
                 arrow = arrUp;
                 xArr = startX;
-                yArr -= 2;
+                yArr -= 4;
 
                 if (yArr <= gp.tileSize) {
                     player.arrowIsFlying = false;
@@ -115,7 +114,7 @@ public class DrawWeapon {
                 checkerForCollisionEnemyWithArray(directionOfArrow, player);
                 arrow = arrDown;
                 xArr = startX;
-                yArr += 2;
+                yArr += 4;
 
                 if (yArr + heightArr >= gp.screenHeight - gp.tileSize) {
                     player.arrowIsFlying = false;
@@ -128,7 +127,7 @@ public class DrawWeapon {
                 checkerForCollisionEnemyWithArray(directionOfArrow, player);
                 arrow = arrLeft;
                 yArr = startY;
-                xArr -= 2;
+                xArr -= 4;
 
                 if (xArr <= gp.tileSize) {
                     player.arrowIsFlying = false;
@@ -140,7 +139,7 @@ public class DrawWeapon {
                 checkerForCollisionEnemyWithArray(directionOfArrow, player);
                 arrow = arrRight;
                 yArr = startY;
-                xArr += 2;
+                xArr += 4;
 
                 if (xArr + widthArr >= gp.screenWidth - gp.tileSize) {
                     player.arrowIsFlying = false;

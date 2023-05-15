@@ -66,6 +66,9 @@ public class Player extends Entity{
         getPlayerImage();
 
     }
+    public Weapons getWeapons(){
+        return weapons;
+    }
     public void callHeartsClassAndDecreaseNumberOfHearts(){
         hearts.decreaseNumberOfHearts();
     }
@@ -141,7 +144,6 @@ public class Player extends Entity{
 
             if(keyH.upPressed){// move up
                 direction = "up";
-
             }if(keyH.downPressed){ // move down
                 direction = "down";
 

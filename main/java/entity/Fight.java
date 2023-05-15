@@ -14,7 +14,7 @@ public class Fight{
         this.gp = gp;
         this.player = player;
         this.enemy = enemy;
-        this.weapons = new Weapons(gp);
+        this.weapons = player.getWeapons();
     }
     public boolean checkPlayerOrienting(){
         switch (player.direction){

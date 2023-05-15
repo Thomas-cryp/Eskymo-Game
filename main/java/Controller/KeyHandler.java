@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc, pause;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc, pause, number1, number2, number3;
 
 //    private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());  TODO
     GamePanel gp;
@@ -44,11 +44,31 @@ public class KeyHandler implements KeyListener {
 //            LOGGER.info("Pressed K");
             fight = true;
         }
+        if(code == KeyEvent.VK_1){
+//            LOGGER.info("Pressed 1");
+            number1 = true;
+        }
+        if(code == KeyEvent.VK_2){
+//            LOGGER.info("Pressed 1");
+            number2 = true;
+        }
+        if(code == KeyEvent.VK_3){
+//            LOGGER.info("Pressed 3");
+            number3 = true;
+        }
         if(code == KeyEvent.VK_P){
 //            LOGGER.info("Pressed P");
             if(gp.getGameState() == gp.getPlayState()){
                 gp.setGameState(gp.getPauseState());
             } else if (gp.getGameState() == gp.getPauseState()) {
+                gp.setGameState(gp.getPlayState());
+            }
+        }
+        if(code == KeyEvent.VK_I){
+//            LOGGER.info("Pressed I");
+            if(gp.getGameState() == gp.getPlayState()){
+                gp.setGameState(gp.getInventoryState());
+            } else if (gp.getGameState() == gp.getInventoryState()) {
                 gp.setGameState(gp.getPlayState());
             }
         }
@@ -69,6 +89,16 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_D){
             rightPressed = false;
+        }
+        if(code == KeyEvent.VK_K){
+            fight = false;
+        }
+        if(code == KeyEvent.VK_1){
+            number1 = false;
+        }if(code == KeyEvent.VK_2){
+            number2 = false;
+        }if(code == KeyEvent.VK_3){
+            number3 = false;
         }
     }
 }

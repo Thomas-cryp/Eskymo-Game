@@ -5,6 +5,7 @@ import entity.Collision;
 import entity.Enemy;
 import entity.Entity;
 import entity.Player;
+import infoWidget.Weapons;
 
 import javax.swing.*;
 
@@ -39,15 +40,24 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private Player player;
+
     private TileManager tileM;
     private Collision collision;
     KeyHandler keyH = new KeyHandler(this); // instance KeyHandler from KeyHandler class
     Thread gameThread;
 
+
+
+
+
     UI ui;
     private int gameState;
+    private int inventoryState = 3;
     private int pauseState = 2;
     private int playState = 1;
+    public int getInventoryState() {
+        return inventoryState;
+    }
 
     public int getGameState() {
         return gameState;
@@ -73,6 +83,8 @@ public class GamePanel extends JPanel implements Runnable{
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);// GamePanel can be focused to receive key input
+
+
         player = new Player(this);
         player.setKeyHandler(keyH);
         tileM = new TileManager(this);
@@ -154,13 +166,16 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
     }
+
     public void update(){
         if(gameState == playState){
             player.update();    //call method for update game
             for (Enemy enemy : enemies) {
                 enemy.update();
             }
-        }else{
+        } else if (gameState == inventoryState) {
+            player.getWeapons().listenerForChangeTheWeapon(keyH);
+        } else{
 
         }
 

@@ -67,7 +67,7 @@ public class Enemy extends Entity{
         this.drawEntity = new DrawEntity(gp);
         this.keyH = player.keyH;
         this.fight = new Fight(gp, player, this);
-        this.weapons = new Weapons(gp);
+        this.weapons = player.getWeapons();
         setDefaultValuesEnemy();
         getEnemyImage();
     }
@@ -162,13 +162,13 @@ public class Enemy extends Entity{
         if(!death) {
             if (calculateHypotenuse() < 300 && checkFightKeyPressed()) {
                 keyH.fight = false;
-
                 if (timerToAttackKey() && !isFight) {
                     if(weapons.isSword()){
                         fight.swordFight(this);
                     } else if (weapons.isBow()) {
                         fight.bowFight();
                     }else{
+                        System.out.println(weapons.isTraps());
                         fight.trapsFight();
                     }
                 }

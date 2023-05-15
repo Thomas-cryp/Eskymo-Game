@@ -1,10 +1,9 @@
 package infoWidget;
 
 import Controller.GamePanel;
+import Controller.KeyHandler;
 import View.DrawWeapon;
-import entity.Enemy;
 import entity.Player;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,7 +19,7 @@ public class Weapons{   // TODO extends on ITEM class
 
     GamePanel gp;
     File jsonFile;
-    JSONParser parser = new JSONParser();
+
     JSONObject data;
     DrawWeapon drawWeapon;
     boolean sword;
@@ -42,6 +41,7 @@ public class Weapons{   // TODO extends on ITEM class
         fileReader();
     }
     public void fileReader(){
+        JSONParser parser = new JSONParser();
         try (FileReader reader = new FileReader(jsonFile)) {
             data = (JSONObject) parser.parse(reader);
         } catch (IOException | ParseException e) {
@@ -56,7 +56,7 @@ public class Weapons{   // TODO extends on ITEM class
         }
     }
     public boolean isSword() {
-        sword = (boolean) data.get("sword");
+        sword = (boolean) data.getOrDefault("sword", false);
         return sword;
     }
 
@@ -68,18 +68,20 @@ public class Weapons{   // TODO extends on ITEM class
     }
 
     public boolean isBow() {
-        bow = (boolean) data.get("bow");
+        bow = (boolean) data.getOrDefault("bow", false);
         return bow;
     }
 
     public void setBow() {
+
         data.put("sword", false);
         data.put("bow", true);
         data.put("traps", false);
         writeFile();
+
     }
     public boolean isTraps() {
-        traps = (boolean) data.get("traps");
+        traps = (boolean) data.getOrDefault("traps", false);
         return traps;
     }
     public void setTraps() {
@@ -88,8 +90,19 @@ public class Weapons{   // TODO extends on ITEM class
         data.put("traps", true);
         writeFile();
     }
+    public void listenerForChangeTheWeapon(KeyHandler keyH){
+        if(keyH.number1){
+            setSword();
+        }
+        if(keyH.number2){
+            setBow();
+        }
+        if(keyH.number3){
+            setTraps();
+        }
+    }
     public void setDefaultValuesOfWeapons(){
-        setBow();
+        setSword();
     }
 
     public void draw(Graphics g2, int x, int y, String direction, boolean arrowFlight, Player player){
