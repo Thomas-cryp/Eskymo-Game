@@ -1,7 +1,7 @@
 package entity;
 
 import Controller.GamePanel;
-import View.DrawWeapon;
+
 import infoWidget.Weapons;
 
 public class Fight{
@@ -48,27 +48,16 @@ public class Fight{
         enemy.setFight(true);
     }
     public void swordFight(Enemy enemy){
+        weapons.setWeaponToFightPosition(true);
         if(checkPlayerOrienting()){
             increaseDamageAndSetFightBooleanValue(enemy);
         }
     }
     public void bowFight(){
-        player.arrowIsFlying = true;
+        weapons.setWeaponToFightPosition(true);
     }
     public void trapsFight(){
-        player.arrowIsFlying = true;
-    }
-
-
-    public boolean checkEntityHearts(){
-        return false;
-    }
-    public boolean spawnAlfaMonster(){  // it will be checked, if is time to spawn monster
-        return false;
-    }
-
-    public boolean checkPlayerPosition(int X, int Y){
-        return false;
+        weapons.setWeaponToFightPosition(true);
     }
 
 

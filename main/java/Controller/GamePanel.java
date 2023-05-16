@@ -3,14 +3,14 @@ package Controller;
 import View.UI;
 import entity.Collision;
 import entity.Enemy;
-import entity.Entity;
+
 import entity.Player;
-import infoWidget.Weapons;
+
 
 import javax.swing.*;
 
 import java.awt.*;
-import java.sql.Time;
+
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 
     // SET ENEMY
-    private int numberOfEnemyInLevel = 2;   // TODO getter and setter
+    private final int numberOfEnemyInLevel = 2;   // TODO getter and setter
     private ArrayList<Enemy> enemies = new ArrayList<>();
 
     private int[][] enemyPositions;
@@ -39,9 +39,9 @@ public class GamePanel extends JPanel implements Runnable{
         return enemies;
     }
 
-    private Player player;
+    private final Player player;
 
-    private TileManager tileM;
+    private final TileManager tileM;
     private Collision collision;
     KeyHandler keyH = new KeyHandler(this); // instance KeyHandler from KeyHandler class
     Thread gameThread;
@@ -52,9 +52,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     UI ui;
     private int gameState;
-    private int inventoryState = 3;
-    private int pauseState = 2;
-    private int playState = 1;
+    private final int inventoryState = 3;
+    private final int pauseState = 2;
+    private final int playState = 1;
     public int getInventoryState() {
         return inventoryState;
     }

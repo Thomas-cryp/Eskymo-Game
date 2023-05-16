@@ -16,8 +16,9 @@ import java.util.Objects;
 public class DrawWeapon {
 
     GamePanel gp;
+    Weapons weapons;
 
-
+    Player player;
 
     private int startX, startY;
 
@@ -28,10 +29,10 @@ public class DrawWeapon {
     public void setStartY(int startY) {
         this.startY = startY;
     }
-    private int counterForTrap;
-
-    private int xBow, yBow, xArr, yArr;
-    private int heightBow, widthBow, heightArr, widthArr;
+    private int counterForTrap = 0;
+    private int playerX, playerY;
+    private int xBow, yBow, xArr, yArr, xSword, ySword;
+    private int heightBow, widthBow, heightArr, widthArr, widthSword, heightSword;
     private BufferedImage arrUp, arrDown, arrLeft, arrRight, bowUp, bowDown, bowRight, bowLeft, bow, arrow, sword, swordUp, swordRight, swordDown, swordLeft, sword45, sword90, sword135, sword180;
     private String directionOfArrow;
 
@@ -83,111 +84,99 @@ public class DrawWeapon {
         widthArr = 39;
         heightArr = 15;
     }
+    public void loadDirectionOfArrow(){
+        switch (player.direction) {
+            case "up", "neutralUp" -> directionOfArrow = "up";
+            case "down", "neutralDown" -> directionOfArrow = "down";
+            case "left", "neutralLeft" -> directionOfArrow = "left";
+            default -> directionOfArrow = "right";
+        }
+    }
 
-    public void fireArrowDrawMethod(int x, int y, String direction, Player player) {
+    public void fireArrowDrawMethod() {
         if (directionOfArrow == null) {
             setStartX(xArr);
             setStartY(yArr);
-            switch (direction) {
-                case "up", "neutralUp" -> {
-                    directionOfArrow = "up";
-                }
-                case "down", "neutralDown" -> {
-                    directionOfArrow = "down";
-                }
-                case "left", "neutralLeft" -> {
-                    directionOfArrow = "left";
-
-                }
-                default -> {    // like "right" and "neutralUp"
-                    directionOfArrow = "right";
-
-                }
-            }
+            loadDirectionOfArrow();
         }
         // Have to be condition
         switch (directionOfArrow) {
-
             case "up" -> {
-                checkerForCollisionEnemyWithArray(directionOfArrow, player);
+                checkerForCollisionEnemyWithArray(directionOfArrow);
                 arrow = arrUp;
                 xArr = startX;
                 yArr -= 4;
 
                 if (yArr <= gp.tileSize) {
-                    player.arrowIsFlying = false;
+                    weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
-
                 }
             }
             case "down" -> {
-                checkerForCollisionEnemyWithArray(directionOfArrow, player);
+                checkerForCollisionEnemyWithArray(directionOfArrow);
                 arrow = arrDown;
                 xArr = startX;
                 yArr += 4;
 
                 if (yArr + heightArr >= gp.screenHeight - gp.tileSize) {
-                    player.arrowIsFlying = false;
+                    weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
-
-
                 }
             }
             case "left" -> {
-                checkerForCollisionEnemyWithArray(directionOfArrow, player);
+                checkerForCollisionEnemyWithArray(directionOfArrow);
                 arrow = arrLeft;
                 yArr = startY;
                 xArr -= 4;
 
                 if (xArr <= gp.tileSize) {
-                    player.arrowIsFlying = false;
+                    weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
-
                 }
             }
             case "right" -> {
-                checkerForCollisionEnemyWithArray(directionOfArrow, player);
+                checkerForCollisionEnemyWithArray(directionOfArrow);
                 arrow = arrRight;
                 yArr = startY;
                 xArr += 4;
 
                 if (xArr + widthArr >= gp.screenWidth - gp.tileSize) {
-                    player.arrowIsFlying = false;
+                    weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
-
                 }
             }
         }
-        switch (direction) {
+        switch (player.direction) {
             case "up", "neutralUp" -> {
                 bow = bowUp;
                 settingForUpAndDownBow();
-                xBow = x + 2;
-                yBow = y - 2 - heightBow;
+                xBow = playerX + 2;
+                yBow = playerY - 2 - heightBow;
 
             }
             case "down", "neutralDown" -> {
                 bow = bowDown;
                 settingForUpAndDownBow();
-                xBow = x + 2;
-                yBow = y + (gp.tileSize) + 2;
+                xBow = playerX + 2;
+                yBow = playerY + (gp.tileSize) + 2;
 
             }
             case "left", "neutralLeft" -> {
                 bow = bowLeft;
                 settingForLeftAndRightBow();
-                yBow = y + 2;
-                xBow = x - 2 - widthBow;
+                yBow = playerY + 2;
+                xBow = playerX - 2 - widthBow;
             }
             default -> {    // like "right" and "neutralUp"
                 bow = bowRight;
                 settingForLeftAndRightBow();
-                yBow = y + 2;
-                xBow = x + (gp.tileSize) + 2;
+                yBow = playerY + 2;
+                xBow = playerX + (gp.tileSize) + 2;
             }
         }
     }
-    public void checkerForCollisionEnemyWithArray(String direction, Player player){
+    public void checkerForCollisionEnemyWithArray(String direction){
+
         ArrayList<Enemy> enemies = gp.getEnemies();
         for (Enemy enemy:
                 enemies) {
@@ -195,126 +184,122 @@ public class DrawWeapon {
                 case "up" -> {
                     if(yArr < (enemy.getY() + gp.tileSize) && yArr > enemy.getY()){
                         if(xArr > enemy.getX() && (xArr + widthArr) < (enemy.getX() + gp.tileSize)){
-                            attackWasSuccessful(enemy, player);
+                            attackWasSuccessful(enemy);
                         }
                     }
                 }
                 case "down" -> {
                     if((yArr + heightArr) > enemy.getY() && (yArr + heightArr) < (enemy.getY() + gp.tileSize)){
                         if(xArr > enemy.getX() && (xArr + widthArr) < (enemy.getX() + gp.tileSize)){
-                            attackWasSuccessful(enemy, player);
+                            attackWasSuccessful(enemy);
                         }
                     }
                 }
                 case "left" -> {
                     if((enemy.getX() + gp.tileSize) > xArr && enemy.getX() < xArr){
                         if((yArr + heightArr) < (enemy.getY() + gp.tileSize) && yArr > enemy.getY()){
-                            attackWasSuccessful(enemy, player);
+                            attackWasSuccessful(enemy);
                         }
                     }
                 }
                 case "right" -> {
                     if(enemy.getX() < (xArr + widthArr) && enemy.getX() > xArr){
                         if((yArr + heightArr) < (enemy.getY() + gp.tileSize) && yArr > enemy.getY()){
-                            attackWasSuccessful(enemy, player);
+                            attackWasSuccessful(enemy);
                         }
                     }
                 }
             }
         }
     }
-    public void attackWasSuccessful(Enemy enemy, Player player){
+    public void attackWasSuccessful(Enemy enemy){
         increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
-        player.arrowIsFlying = false;
+        weapons.setWeaponToFightPosition(false);
         directionOfArrow = null;
     }
-    public void drawBowAndArrowInStatic(int x, int y, String direction){
-                switch (direction) {
-                    case "up", "neutralUp" -> {
-                        bow = bowUp;
-                        arrow = arrUp;
-
-                        settingForUpAndDownBow();
-                        settingForUpAndDownArray();
-                        xBow = x + 2;
-                        xArr = xBow + ((widthBow - widthArr)/2);
-                        yBow = y - 2 - heightBow;
-                        yArr = (yBow + heightBow) - heightArr;
-                    }
-                    case "down", "neutralDown" -> {
-                        bow = bowDown;
-                        arrow = arrDown;
-
-                        settingForUpAndDownBow();
-                        settingForUpAndDownArray();
-                        xBow = x + 2;
-                        xArr = xBow + ((widthBow - widthArr)/2);
-                        yBow = y + (gp.tileSize) + 2;
-                        yArr = yBow;
-
-                    }
-                    case "left", "neutralLeft" -> {
-                        bow = bowLeft;
-                        arrow = arrLeft;
-
-                        settingForLeftAndRightBow();
-                        settingForLeftAndRightArray();
-                        yBow = y + 2;
-                        yArr = yBow + ((heightBow - heightArr)/2);
-                        xBow = x - 2 - widthBow;
-                        xArr = (xBow + widthBow) - widthArr;
-
-                    }
-                    default -> {    // like "right" and "neutralRight"
-                        bow = bowRight;
-                        arrow = arrRight;
-
-                        settingForLeftAndRightBow();
-                        settingForLeftAndRightArray();
-                        yBow = y + 2;
-                        yArr = yBow + ((heightBow - heightArr)/2);
-                        xBow = x + (gp.tileSize) + 2;
-                        xArr = xBow;
-                    }
+    public void drawBowAndArrowInStatic(){
+            switch (player.direction) {
+                case "up", "neutralUp" -> {
+                    bow = bowUp;
+                    arrow = arrUp;
+                    settingForUpAndDownBow();
+                    settingForUpAndDownArray();
+                    xBow = playerX + 2;
+                    xArr = xBow + ((widthBow - widthArr)/2);
+                    yBow = playerY - 2 - heightBow;
+                    yArr = (yBow + heightBow) - heightArr;
                 }
+                case "down", "neutralDown" -> {
+                    bow = bowDown;
+                    arrow = arrDown;
+                    settingForUpAndDownBow();
+                    settingForUpAndDownArray();
+                    xBow = playerX + 2;
+                    xArr = xBow + ((widthBow - widthArr)/2);
+                    yBow = playerY + (gp.tileSize) + 2;
+                    yArr = yBow;
 
+                }
+                case "left", "neutralLeft" -> {
+                    bow = bowLeft;
+                    arrow = arrLeft;
+                    settingForLeftAndRightBow();
+                    settingForLeftAndRightArray();
+                    yBow = playerY + 2;
+                    yArr = yBow + ((heightBow - heightArr)/2);
+                    xBow = playerX - 2 - widthBow;
+                    xArr = (xBow + widthBow) - widthArr;
+
+                }
+                default -> {    // like "right" and "neutralRight"
+                    bow = bowRight;
+                    arrow = arrRight;
+                    settingForLeftAndRightBow();
+                    settingForLeftAndRightArray();
+                    yBow = playerY + 2;
+                    yArr = yBow + ((heightBow - heightArr)/2);
+                    xBow = playerX + (gp.tileSize) + 2;
+                    xArr = xBow;
+                }
             }
-    public void drawTraps(int x, int y, String direction){
-        switch (direction) {
+
+        }
+    public void drawTraps(){    // TODO better picture
+        switch (player.direction) {
             case "up", "neutralUp" -> {
                 bow = bowUp;
                 settingForUpAndDownBow();
-                xBow = x + 2;
-                yBow = y - 2 - heightBow;
+                xBow = playerX + 2;
+                yBow = playerY - 2 - heightBow;
 
             }
             case "down", "neutralDown" -> {
                 bow = bowDown;
                 settingForUpAndDownBow();
-                xBow = x + 2;
-                yBow = y + (gp.tileSize) + 2;
+                xBow = playerX + 2;
+                yBow = playerY + (gp.tileSize) + 2;
 
             }
             case "left", "neutralLeft" -> {
                 bow = bowLeft;
                 settingForLeftAndRightBow();
-                yBow = y + 2;
-                xBow = x - 2 - widthBow;
+                yBow = playerY + 2;
+                xBow = playerX - 2 - widthBow;
             }
             default -> {    // like "right" and "neutralUp"
                 bow = bowRight;
                 settingForLeftAndRightBow();
-                yBow = y + 2;
-                xBow = x + (gp.tileSize) + 2;
+                yBow = playerY + 2;
+                xBow = playerX + (gp.tileSize) + 2;
 
             }
         }
     }
-    public void holdTheTrapsAndStartCounting(int x, int y, String direction, Player player){
+    public void holdTheTrapsAndStartCounting(){
         counterForTrap ++;
-        drawTraps(x, y, direction);
+        drawTraps();
         if(counterForTrap == 1){
-            switch (direction) {
+            switch (player.direction) {
                 case "up", "neutralUp" -> {
                     arrow = arrUp;
                     settingForUpAndDownArray();
@@ -344,7 +329,7 @@ public class DrawWeapon {
         }
         if(counterForTrap == 120){
             bombExplosion();
-            player.arrowIsFlying = false;
+            weapons.setWeaponToFightPosition(false);
             counterForTrap = 0;
         }
 
@@ -366,35 +351,73 @@ public class DrawWeapon {
         enemy.setFight(true);
     }
     public void setSword(){
+        sword = swordUp;
+        heightSword = 40;
+        widthSword = 17;
+        switch (player.direction) {
+            case "down", "neutralDown", "left", "neutralLeft" -> {
+                ySword = playerY + 8;
+                xSword = playerX - 2 - widthSword;
+            }
+            default -> {    // like "right" and "neutralRight"
+                ySword = playerY + 8;
+                xSword = (playerX + gp.tileSize) + 2;
+            }
+        }
+    }
+    public void setSwordInAttack(){
+        switch (player.direction) {
+            case "up", "neutralUp" -> {
+                sword = swordUp;
+                heightSword = 40;
+                widthSword = 17;
+                ySword = (playerY + heightSword + 2);
+                xSword = playerX + (gp.tileSize - widthSword)/2;
+            }
+            case "down", "neutralDown" -> {
+                sword = swordDown;
+            }
+            case "left", "neutralLeft" -> {
+                sword = swordLeft;
+            }
+            default -> {    // like "right" and "neutralRight"
+                sword = swordRight;
+            }
+        }
     }
 
-    public void finalDraw(Graphics g2, int x, int y, String direction, Weapons weapons, boolean arrowFlight, Player player){
+    public void finalDraw(Graphics g2, Weapons weapons, Player player){
+        this.weapons = weapons;
+        this.player = player;
+        this.playerX = player.getX();
+        this.playerY = player.getY();
+
         if(gp.getGameState() == gp.getPlayState()){
             if(weapons.isBow()){
-                if(!arrowFlight){
-                    drawBowAndArrowInStatic(x, y, direction);
+                if(!weapons.isWeaponToFightPosition()){
+                    drawBowAndArrowInStatic();
                 }else{
-                    fireArrowDrawMethod(x, y, direction, player);
+                    fireArrowDrawMethod();
                 }
                 g2.drawImage(bow, xBow, yBow, widthBow, heightBow, null);
                 g2.drawImage(arrow, xArr, yArr, widthArr, heightArr, null);
             } else if (weapons.isTraps()) {
-                // TODO
-                if(!arrowFlight){
-                    drawTraps(x, y, direction);
+                if(!weapons.isWeaponToFightPosition()){
+                    drawTraps();
                     g2.drawImage(bow, xBow, yBow, widthBow, heightBow, null); // TODO for another image
 
                 }else{
-                    holdTheTrapsAndStartCounting(x, y, direction, player);
+                    holdTheTrapsAndStartCounting();
                     g2.drawImage(bow, xBow, yBow, widthBow, heightBow, null);
                     g2.drawImage(arrow, xArr, yArr, widthArr, heightArr, null);
                 }
-            } else{
-                if(!arrowFlight){
+            }else{  // sword
+                if(!weapons.isWeaponToFightPosition()){
                     setSword();
                 }else{
-
+                    setSwordInAttack();
                 }
+                g2.drawImage(sword, xSword, ySword, widthSword, heightSword, null);
             }
         }else{
 

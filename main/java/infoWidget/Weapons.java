@@ -26,6 +26,15 @@ public class Weapons{   // TODO extends on ITEM class
     boolean bow;
     boolean traps;
     private boolean endOfArrow = false;
+    private boolean weaponToFightPosition = false;
+
+    public boolean isWeaponToFightPosition() {
+        return weaponToFightPosition;
+    }
+
+    public void setWeaponToFightPosition(boolean weaponToFightPosition) {
+        this.weaponToFightPosition = weaponToFightPosition;
+    }
 
     public boolean isEndOfArrow() {
         return endOfArrow;
@@ -105,7 +114,7 @@ public class Weapons{   // TODO extends on ITEM class
         setSword();
     }
 
-    public void draw(Graphics g2, int x, int y, String direction, boolean arrowFlight, Player player){
-        drawWeapon.finalDraw(g2, x, y, direction, this, arrowFlight, player);
+    public void draw(Graphics g2, Player player){
+        drawWeapon.finalDraw(g2, this, player);
     }
 }

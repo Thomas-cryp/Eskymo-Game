@@ -3,7 +3,6 @@ package entity;
 import Controller.GamePanel;
 import Controller.KeyHandler;
 import View.DrawEntity;
-import View.DrawWeapon;
 import infoWidget.Hearts;
 import infoWidget.Weapons;
 
@@ -24,11 +23,6 @@ public class Player extends Entity{
     Weapons weapons;
     private boolean attackByEnemy = false;
     private String fakeDirectionInAttack;   //TODO better in Entity class
-    private int timerToAttackByEnemy;
-
-    public boolean isAttackByEnemy() {
-        return attackByEnemy;
-    }
 
     public void setAttackByEnemy(boolean attackByEnemy) {
         this.attackByEnemy = attackByEnemy;
@@ -38,7 +32,7 @@ public class Player extends Entity{
     private int y;
     boolean isFight;
     private int timerForMovingBack;
-    public boolean arrowIsFlying = false;
+
     private boolean death = true;
 
     public int getTimerToAttackKey() {
@@ -198,7 +192,7 @@ public class Player extends Entity{
     }
     public void draw(Graphics g2){
         drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
-        weapons.draw(g2, x, y, direction, arrowIsFlying, this);
+        weapons.draw(g2, this);
         hearts.draw(g2);
     }
     public int getX() {
