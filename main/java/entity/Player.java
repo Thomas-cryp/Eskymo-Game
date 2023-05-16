@@ -39,6 +39,7 @@ public class Player extends Entity{
     boolean isFight;
     private int timerForMovingBack;
     public boolean arrowIsFlying = false;
+    private boolean death = true;
 
     public int getTimerToAttackKey() {
         return timerToAttackKey;
@@ -84,6 +85,14 @@ public class Player extends Entity{
         actualHearts = new int[4];
         hearts.getLengthOfHeartsAndSetArray(actualHearts.length);
         weapons.setDefaultValuesOfWeapons();
+    }
+    public boolean checkCollisionWithHearts(Enemy enemy){
+        if(!collisionChecker.compareXAndYValueForCollisionBetweenPlayerAndHeart(this, enemy)){
+            return false;
+        }else{
+            hearts.increaseNumberOfHeartsWithHalfHeart();
+            return true;
+        }
     }
 
     public void getPlayerImage(){
@@ -146,10 +155,8 @@ public class Player extends Entity{
                 direction = "up";
             }if(keyH.downPressed){ // move down
                 direction = "down";
-
             }if(keyH.leftPressed){ // move left
                 direction = "left";
-
             }if(keyH.rightPressed){    //move right
                 direction = "right";
             }
@@ -190,7 +197,7 @@ public class Player extends Entity{
 
     }
     public void draw(Graphics g2){
-        drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, x, y);
+        drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
         weapons.draw(g2, x, y, direction, arrowIsFlying, this);
         hearts.draw(g2);
     }

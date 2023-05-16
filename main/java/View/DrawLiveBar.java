@@ -1,6 +1,7 @@
 package View;
 
 import Controller.GamePanel;
+import entity.Enemy;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,6 +25,9 @@ public class DrawLiveBar {
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+    public void drawHeartAfterDeathOFEnemy(Graphics g2, Enemy enemy){
+        g2.drawImage(half, enemy.getX(), enemy.getY(), gp.tileSize, gp.tileSize, null);
     }
     public void draw(Graphics g2, int[] actualArrayOfHearts){
         BufferedImage image;

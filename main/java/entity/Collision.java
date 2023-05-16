@@ -71,6 +71,17 @@ public class Collision {
                 }
             }
         }
+    }
+    public boolean compareXAndYValueForCollisionBetweenPlayerAndHeart(Player player, Enemy enemy) {
+        int centerXOfPlayer = player.getX() + (gp.tileSize/2);
+        int centerYOfPlayer = player.getY() + (gp.tileSize/2);
+        int centerXOfHeart = enemy.getX() + (gp.tileSize/2);
+        int centerYOfHeart = enemy.getY() + (gp.tileSize/2);
 
+        if(Math.abs(centerXOfPlayer - centerXOfHeart) <= (gp.tileSize/2) && Math.abs(centerYOfPlayer - centerYOfHeart) <= (gp.tileSize/2)){
+            enemy.setdrawing(false);
+            return true;
+        }
+        return false;
     }
 }

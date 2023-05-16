@@ -32,7 +32,7 @@ public class DrawWeapon {
 
     private int xBow, yBow, xArr, yArr;
     private int heightBow, widthBow, heightArr, widthArr;
-    private BufferedImage arrUp, arrDown, arrLeft, arrRight, bowUp, bowDown, bowRight, bowLeft, bow, arrow;
+    private BufferedImage arrUp, arrDown, arrLeft, arrRight, bowUp, bowDown, bowRight, bowLeft, bow, arrow, sword, swordUp, swordRight, swordDown, swordLeft, sword45, sword90, sword135, sword180;
     private String directionOfArrow;
 
     public DrawWeapon(GamePanel gp) {
@@ -51,6 +51,16 @@ public class DrawWeapon {
             bowDown = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/bow_down.png")));
             bowLeft = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/bow_left.png")));
             bowRight = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/bow_right.png")));
+
+            swordUp = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_up.png")));
+            swordDown = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_down.png")));
+            swordLeft = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_left.png")));
+            swordRight = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_right.png")));
+
+            sword45 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_45.png")));
+            sword90 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_90.png")));
+            sword135 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_135.png")));
+            sword180 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_180.png")));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -355,6 +365,8 @@ public class DrawWeapon {
         enemy.setDamage(damage);
         enemy.setFight(true);
     }
+    public void setSword(){
+    }
 
     public void finalDraw(Graphics g2, int x, int y, String direction, Weapons weapons, boolean arrowFlight, Player player){
         if(gp.getGameState() == gp.getPlayState()){
@@ -376,6 +388,12 @@ public class DrawWeapon {
                     holdTheTrapsAndStartCounting(x, y, direction, player);
                     g2.drawImage(bow, xBow, yBow, widthBow, heightBow, null);
                     g2.drawImage(arrow, xArr, yArr, widthArr, heightArr, null);
+                }
+            } else{
+                if(!arrowFlight){
+                    setSword();
+                }else{
+
                 }
             }
         }else{

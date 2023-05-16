@@ -40,9 +40,9 @@ public class UI {
     }
     public void drawingInventorySite() {
         String text = "INVENTORY";
-        String text1 = "pressed 1 to change to sword";
-        String text2 = "pressed 2 to change to bow and arrows";
-        String text3 = "pressed 3 to change to traps";
+        String text1 = "press 1 to change to sword";
+        String text2 = "press 2 to change to bow and arrows";
+        String text3 = "press 3 to change to traps";
         int x = halfWidthOfTheScreenWithText(text);
         int y = gp.screenHeight / 3;
         g2.setFont(font1);
@@ -74,4 +74,5 @@ public class UI {
         int x = gp.screenWidth/2 - length/2;
         return x;
     }
+
 }

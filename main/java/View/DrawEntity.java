@@ -12,7 +12,7 @@ public class DrawEntity {
         this.gp = gp;
     }
 
-    public void draw(Graphics g2, String direction, int spriteNum, BufferedImage up1, BufferedImage up2, BufferedImage down1, BufferedImage down2, BufferedImage left1, BufferedImage left2, BufferedImage right1, BufferedImage right2, BufferedImage upNeutral, BufferedImage downNeutral, BufferedImage leftNeutral, BufferedImage rightNeutral, BufferedImage iceAfterHit, Boolean isFight, int x, int y){
+    public void draw(Graphics g2, String direction, int spriteNum, BufferedImage up1, BufferedImage up2, BufferedImage down1, BufferedImage down2, BufferedImage left1, BufferedImage left2, BufferedImage right1, BufferedImage right2, BufferedImage upNeutral, BufferedImage downNeutral, BufferedImage leftNeutral, BufferedImage rightNeutral, BufferedImage iceAfterHit, Boolean isFight, Boolean death, int x, int y){
 
         BufferedImage image = null;
             switch (direction) {
@@ -60,7 +60,7 @@ public class DrawEntity {
 
 
             g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
-            if(isFight){
+            if(isFight && !death){  // TODO
                 g2.drawImage(iceAfterHit, x, y, gp.tileSize, gp.tileSize, null);
             }
     }

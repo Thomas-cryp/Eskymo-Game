@@ -47,6 +47,32 @@ public class Hearts{ // TODO extends ITEM
             }
         }
     }
+    public void increaseNumberOfHeartsWithHalfHeart(){
+        boolean fullHeart = false;
+        int actualIndex = -1;
+        for (int i:
+             actualHeartsArray) {
+            actualIndex ++;
+            if(i == 2){
+                fullHeart = true;
+            }
+            if(fullHeart){
+                int potentialIndex = actualIndex - 1;
+                if(potentialIndex < 0){
+                    System.out.println("I cannot increase number of hearts");
+                }else{
+                    if(actualHeartsArray[potentialIndex] == 1){
+                        actualHeartsArray[potentialIndex] = 2;
+                    }
+                    if(actualHeartsArray[potentialIndex] == 0){
+                        actualHeartsArray[potentialIndex] = 1;
+                    }
+                }
+                break;
+
+            }
+        }
+    }
 
     public void draw(Graphics g2){
         drawLiveBar.draw(g2, actualHeartsArray);

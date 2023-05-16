@@ -3,6 +3,8 @@ package entity;
 import Controller.GamePanel;
 import Controller.KeyHandler;
 import View.DrawEntity;
+import View.DrawLiveBar;
+import View.UI;
 import infoWidget.Weapons;
 
 import javax.imageio.ImageIO;
@@ -20,6 +22,7 @@ public class Enemy extends Entity{
     Player player;
     Fight fight;
     Weapons weapons;
+    DrawLiveBar drawLiveBar;
 
     private int damage = 0;
 
@@ -43,6 +46,11 @@ public class Enemy extends Entity{
 
     private int x = 400;
     private int y = 400;
+    private boolean drawing = true;
+
+    public void setdrawing(boolean drawing) {
+        this.drawing = drawing;
+    }
 
     private int defaultX;
     private int defaultY;
@@ -68,6 +76,7 @@ public class Enemy extends Entity{
         this.keyH = player.keyH;
         this.fight = new Fight(gp, player, this);
         this.weapons = player.getWeapons();
+        this.drawLiveBar = new DrawLiveBar(gp);
         setDefaultValuesEnemy();
         getEnemyImage();
     }
@@ -123,7 +132,6 @@ public class Enemy extends Entity{
         double a = y - yWeapon;
         distancePlayerAndEnemy = Math.sqrt(b * b + a * a);
         return distancePlayerAndEnemy;
-
     }
 
     public boolean timerToAttackKey(){
@@ -157,6 +165,7 @@ public class Enemy extends Entity{
         if(damage == 3){
 //            JOptionPane.showMessageDialog(null, "Death of first enemy");
             death = true;
+
         }
 
         if(!death) {
@@ -182,6 +191,7 @@ public class Enemy extends Entity{
             if (isFight) {
                 counterOfFreezeTime++;
                 if (counterOfFreezeTime >= 120) {
+
                     isFight = false;
                     counterOfFreezeTime = 0;
                 }
@@ -264,6 +274,13 @@ public class Enemy extends Entity{
     }
 
     public void draw(Graphics g2) {
-        drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, x, y);
+        if(drawing){
+            drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
+            if(death){
+                if(!player.checkCollisionWithHearts(this)){
+                    drawLiveBar.drawHeartAfterDeathOFEnemy(g2, this);
+                }
+            }
+        }
     }
 }
