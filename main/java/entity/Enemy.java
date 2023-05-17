@@ -83,18 +83,18 @@ public class Enemy extends Entity{
 
     public void getEnemyImage(){
         try{
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_2.png")));
-            upNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_up.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_down_1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_down_2.png")));
-            downNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_left_1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_left_2.png")));
-            leftNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_left.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_1.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_right_2.png")));
-            rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_neutral_right.png")));
+            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/up1.png")));
+            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/up2.png")));
+            upNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/upNeutral.png")));
+            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/down1.png")));
+            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/down2.png")));
+            downNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/downNeutral.png")));
+            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/left1.png")));
+            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/left2.png")));
+            leftNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/leftNeutral.png")));
+            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/right1.png")));
+            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/right2.png")));
+            rightNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/cyclope/rightNeutral.png")));
             iceAfterHit = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/iceAfterHit/iceAfterHitPicture.png")));
         }catch(IOException e){
             e.printStackTrace();
@@ -169,15 +169,14 @@ public class Enemy extends Entity{
         }
 
         if(!death) {
-            if (calculateHypotenuse() < 300 && checkFightKeyPressed()) {
+            if (checkFightKeyPressed()) {
                 keyH.fight = false;
                 if (timerToAttackKey() && !isFight) {
                     if(weapons.isSword()){
-                        fight.swordFight(this);
+                        fight.swordFight();
                     } else if (weapons.isBow()) {
                         fight.bowFight();
                     }else{
-                        System.out.println(weapons.isTraps());
                         fight.trapsFight();
                     }
                 }

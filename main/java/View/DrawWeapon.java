@@ -29,12 +29,14 @@ public class DrawWeapon {
     public void setStartY(int startY) {
         this.startY = startY;
     }
+    int counterForSword = 0;
     private int counterForTrap = 0;
     private int playerX, playerY;
     private int xBow, yBow, xArr, yArr, xSword, ySword;
     private int heightBow, widthBow, heightArr, widthArr, widthSword, heightSword;
     private BufferedImage arrUp, arrDown, arrLeft, arrRight, bowUp, bowDown, bowRight, bowLeft, bow, arrow, sword, swordUp, swordRight, swordDown, swordLeft, sword45, sword90, sword135, sword180;
     private String directionOfArrow;
+
 
     public DrawWeapon(GamePanel gp) {
         this.gp = gp;
@@ -366,22 +368,64 @@ public class DrawWeapon {
         }
     }
     public void setSwordInAttack(){
+        counterForSword ++;
+        if(counterForSword == 10){
+            weapons.setWeaponToFightPosition(false);
+            counterForSword = 0;
+        }
         switch (player.direction) {
             case "up", "neutralUp" -> {
                 sword = swordUp;
                 heightSword = 40;
                 widthSword = 17;
-                ySword = (playerY + heightSword + 2);
+                ySword = (playerY - heightSword - 2);
                 xSword = playerX + (gp.tileSize - widthSword)/2;
+                checkCollisionSwordWithEnemy();
             }
             case "down", "neutralDown" -> {
                 sword = swordDown;
+                heightSword = 40;
+                widthSword = 17;
+                ySword = (playerY + gp.tileSize) + 2;
+                xSword = playerX + (gp.tileSize - widthSword)/2;
+                checkCollisionSwordWithEnemy();
             }
             case "left", "neutralLeft" -> {
                 sword = swordLeft;
+                heightSword = 17;
+                widthSword = 40;
+                xSword = playerX - 2 - widthSword;
+                ySword = playerY + (gp.tileSize - heightSword)/2;
+                checkCollisionSwordWithEnemy();
             }
             default -> {    // like "right" and "neutralRight"
                 sword = swordRight;
+                heightSword = 17;
+                widthSword = 40;
+                xSword = playerX + gp.tileSize + 2;
+                ySword = playerY + (gp.tileSize - heightSword)/2;
+                checkCollisionSwordWithEnemy();
+            }
+        }
+    }
+
+
+    private void checkCollisionSwordWithEnemy(){
+        ArrayList<Enemy> enemies = gp.getEnemies();
+        int toleranceWidth = widthSword/2 + gp.tileSize/2;
+        int toleranceHeight = heightSword/2 + gp.tileSize/2;
+        int centerOfSwordX = xSword + widthSword/2;
+        int centerOfSwordY = ySword + heightSword/2;
+        for (Enemy enemy:
+             enemies) {
+            int centerOfEnemyX = enemy.getX() + gp.tileSize/2;
+            int centerOfEnemyY = enemy.getY() + gp.tileSize/2;
+            if(Math.abs(centerOfSwordX - centerOfEnemyX) <= toleranceWidth){
+                if(Math.abs(centerOfSwordY - centerOfEnemyY) <= toleranceHeight){
+                    weapons.setWeaponToFightPosition(false);
+
+                    increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
+                }
             }
         }
     }

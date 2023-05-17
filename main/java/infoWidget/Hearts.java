@@ -50,7 +50,6 @@ public class Hearts{ // TODO extends ITEM
             if(fullHeart){
                 int potentialIndex = actualIndex - 1;
                 if(potentialIndex < 0){
-                    System.out.println("I cannot increase number of hearts");
                 }else{
                     if(actualHeartsArray[potentialIndex] == 1){
                         actualHeartsArray[potentialIndex] = 2;

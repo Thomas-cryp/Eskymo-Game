@@ -47,11 +47,8 @@ public class Fight{
         enemy.setDamage(damage);
         enemy.setFight(true);
     }
-    public void swordFight(Enemy enemy){
+    public void swordFight(){
         weapons.setWeaponToFightPosition(true);
-        if(checkPlayerOrienting()){
-            increaseDamageAndSetFightBooleanValue(enemy);
-        }
     }
     public void bowFight(){
         weapons.setWeaponToFightPosition(true);
