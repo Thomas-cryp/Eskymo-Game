@@ -14,7 +14,8 @@ public class Collision {
 
     public Collision(GamePanel gp, Player player) {
         this.gp = gp;
-        this.tileM = new TileManager(gp);
+        this.tileM = gp.getTileM();
+
         this.player = player;
         this.lm = new LoadMap(gp);
         lm.loadMap("/blocks/map01.txt"); // TODO better

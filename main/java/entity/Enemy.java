@@ -2,6 +2,8 @@ package entity;
 
 import Controller.GamePanel;
 import Controller.KeyHandler;
+import Controller.Threat;
+import View.DrawBoss;
 import View.DrawEntity;
 import View.DrawLiveBar;
 
@@ -23,7 +25,8 @@ public class Enemy extends Entity{
     Fight fight;
     Weapons weapons;
     DrawLiveBar drawLiveBar;
-
+    DrawBoss drawBoss;
+    Threat threat;
     private int damage = 0;
 
     public int getDamage() {
@@ -36,6 +39,10 @@ public class Enemy extends Entity{
 
     private boolean death = false;
 
+    public boolean isDeath() {
+        return death;
+    }
+
     public int getX() {
         return x;
     }
@@ -46,10 +53,30 @@ public class Enemy extends Entity{
 
     private int x = 400;
     private int y = 400;
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     private boolean drawing = true;
 
     public void setdrawing(boolean drawing) {
         this.drawing = drawing;
+    }
+
+
+
+    public void setDefaultX(int defaultX) {
+        this.defaultX = defaultX;
+    }
+
+
+    public void setDefaultY(int defaultY) {
+        this.defaultY = defaultY;
     }
 
     private int defaultX;
@@ -77,8 +104,15 @@ public class Enemy extends Entity{
         this.fight = new Fight(gp, player, this);
         this.weapons = player.getWeapons();
         this.drawLiveBar = new DrawLiveBar(gp);
+        this.drawBoss = new DrawBoss(gp);
+        this.threat = gp.getThreat();
+
+        if(gp.isBoss()){
+            drawBoss.setBossPositionAndSize(this);
+        }
         setDefaultValuesEnemy();
         getEnemyImage();
+
     }
 
     public void getEnemyImage(){
@@ -162,11 +196,25 @@ public class Enemy extends Entity{
 
     public void update(){
 
-        if(damage == 3){
+        if(!gp.isBoss()){
+            if(damage == 1){
 //            JOptionPane.showMessageDialog(null, "Death of first enemy");
-            death = true;
+                death = true;
+                if(gp.checkIfIsTimeForBoss()){
+                    gp.setBoss(true);
+                    gp.createBoss();
+                }
+            }
+        }else{
 
+            if(damage == 2){
+                death = true;
+                gp.setBoss(false);
+                threat.setStopGameLoop(true);
+                gp.setGameState(gp.getNextLevelPage());
+            }
         }
+
 
         if(!death) {
             if (checkFightKeyPressed()) {
@@ -180,9 +228,12 @@ public class Enemy extends Entity{
                         fight.trapsFight();
                     }
                 }
-            } else if (calculateHypotenuse() < 20 && timerAfterAttackPlayerByEnemy()) {
+            } else if (calculateHypotenuse() < 30 && timerAfterAttackPlayerByEnemy()) {
                 player.setAttackByEnemy(true);
                 hittingByEnemy = true;
+                if(gp.isBoss()){
+                    player.callHeartsClassAndDecreaseNumberOfHearts();
+                }
                 player.callHeartsClassAndDecreaseNumberOfHearts();
             }
 
@@ -201,7 +252,7 @@ public class Enemy extends Entity{
                 }
                 timerForStandingAfterHitPlayer++;
                 updateImageStanding();
-            } else if (calculateHypotenuse() < 150) {
+            } else if (calculateHypotenuse() < 220) {
                 setPlayerPosition();
                 moveShortestPath(playerX, playerY);
 
@@ -273,13 +324,15 @@ public class Enemy extends Entity{
     }
 
     public void draw(Graphics g2) {
-        if(drawing){
+        if(drawing && !gp.isBoss()){
             drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
             if(death){
                 if(!player.checkCollisionWithHearts(this)){
                     drawLiveBar.drawHeartAfterDeathOFEnemy(g2, this);
                 }
             }
+        }if(gp.isBoss()){
+            drawBoss.draw(g2, this);
         }
     }
 }

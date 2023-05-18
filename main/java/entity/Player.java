@@ -57,8 +57,6 @@ public class Player extends Entity{
         this.collisionChecker = new Collision(gp, this);
         this.drawEntity = new DrawEntity(gp);
 
-        setDefaultValues();
-        getPlayerImage();
 
     }
     public Weapons getWeapons(){

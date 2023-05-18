@@ -1,7 +1,7 @@
 package View;
 
 import Controller.GamePanel;
-import Controller.TileManager;
+
 import Model.tile.LoadMap;
 import Model.tile.Tile;
 import Model.tile.TilesImport;

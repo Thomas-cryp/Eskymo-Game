@@ -24,6 +24,8 @@ public class TileManager{
             this.gp = gp;
             ti = new TilesImport();
             lm = new LoadMap(gp);
+        }
+        public void loadMapAndTileImage(){
             lm.loadMap("/blocks/map01.txt");
             tile = ti.getTileImage();
         }

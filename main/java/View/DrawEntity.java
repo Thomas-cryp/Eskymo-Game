@@ -60,7 +60,7 @@ public class DrawEntity {
 
 
             g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
-            if(isFight && !death){  // TODO
+            if(isFight && !death){
                 g2.drawImage(iceAfterHit, x, y, gp.tileSize, gp.tileSize, null);
             }
     }

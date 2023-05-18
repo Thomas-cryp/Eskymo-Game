@@ -19,6 +19,7 @@ public class DrawWeapon {
     Weapons weapons;
 
     Player player;
+    Enemy bossEnemy;
 
     private int startX, startY;
 
@@ -215,6 +216,9 @@ public class DrawWeapon {
         }
     }
     public void attackWasSuccessful(Enemy enemy){
+        if(gp.isBoss()){
+            enemy = bossEnemy;
+        }
         increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
         weapons.setWeaponToFightPosition(false);
         directionOfArrow = null;
@@ -339,12 +343,17 @@ public class DrawWeapon {
     }
     public void bombExplosion(){
         ArrayList<Enemy> enemies = gp.getEnemies();
-        for (Enemy enemy:
-             enemies) {
-            if(enemy.calculateHypotenuseForTrap(xArr, yArr) < 100){
-                increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
+        if(gp.isBoss()){
+           increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(bossEnemy);
+        }else{
+            for (Enemy enemy:
+                    enemies) {
+                if(enemy.calculateHypotenuseForTrap(xArr, yArr) < 100){
+                    increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
+                }
             }
         }
+
     }
     public void increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(Enemy enemy){
         int damage = enemy.getDamage();
@@ -408,6 +417,17 @@ public class DrawWeapon {
             }
         }
     }
+    public void calculateCollisions(Enemy enemy, int toleranceWidth, int toleranceHeight, int centerOfSwordX, int centerOfSwordY){
+        int centerOfEnemyX = enemy.getX() + gp.tileSize/2;
+        int centerOfEnemyY = enemy.getY() + gp.tileSize/2;
+        if(Math.abs(centerOfSwordX - centerOfEnemyX) <= toleranceWidth){
+            if(Math.abs(centerOfSwordY - centerOfEnemyY) <= toleranceHeight){
+                weapons.setWeaponToFightPosition(false);
+
+                increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
+            }
+        }
+    }
 
 
     private void checkCollisionSwordWithEnemy(){
@@ -416,21 +436,21 @@ public class DrawWeapon {
         int toleranceHeight = heightSword/2 + gp.tileSize/2;
         int centerOfSwordX = xSword + widthSword/2;
         int centerOfSwordY = ySword + heightSword/2;
-        for (Enemy enemy:
-             enemies) {
-            int centerOfEnemyX = enemy.getX() + gp.tileSize/2;
-            int centerOfEnemyY = enemy.getY() + gp.tileSize/2;
-            if(Math.abs(centerOfSwordX - centerOfEnemyX) <= toleranceWidth){
-                if(Math.abs(centerOfSwordY - centerOfEnemyY) <= toleranceHeight){
-                    weapons.setWeaponToFightPosition(false);
-
-                    increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
-                }
+        if(gp.isBoss()){
+            calculateCollisions(bossEnemy, toleranceWidth, toleranceHeight, centerOfSwordX, centerOfSwordY);
+        }else{
+            for (Enemy enemy:
+                    enemies) {
+                calculateCollisions(enemy, toleranceWidth, toleranceHeight, centerOfSwordX, centerOfSwordY);
             }
         }
+
     }
 
     public void finalDraw(Graphics g2, Weapons weapons, Player player){
+        if(gp.isBoss()){
+            this.bossEnemy = gp.getBossEnemy();
+        }
         this.weapons = weapons;
         this.player = player;
         this.playerX = player.getX();
