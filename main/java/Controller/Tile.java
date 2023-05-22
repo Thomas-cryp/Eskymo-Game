@@ -1,4 +1,4 @@
-package Model.tile;
+package Controller;
 
 import Controller.GamePanel;
 

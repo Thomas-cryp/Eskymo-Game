@@ -1,7 +1,7 @@
 package Controller;
 
+import Model.*;
 import View.UI;
-import entity.Collision;
 import entity.Enemy;
 
 import entity.Player;
@@ -13,7 +13,6 @@ import java.awt.*;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel{
@@ -28,21 +27,39 @@ public class GamePanel extends JPanel{
     public final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
 
 
+    public int getNumberOfEnemyInLevel() {
+        return numberOfEnemyInLevel;
+    }
 
-
+    public void setNumberOfEnemyInLevel(int numberOfEnemyInLevel1) {
+        this.numberOfEnemyInLevel = numberOfEnemyInLevel1;
+    }
 
     // SET ENEMY
-    private final int numberOfEnemyInLevel = 1;   // TODO getter and setter
+    private int numberOfEnemyInLevel;  // TODO getter and setter
     private ArrayList<Enemy> enemies = new ArrayList<>();
 
     private int[][] enemyPositions;
+    private int actualLevel;
+    private boolean endOfGame;
 
+    public boolean isEndOfGame() {
+        return endOfGame;
+    }
+
+    public void setEndOfGame(boolean endOfGame) {
+        if(endOfGame){
+            gameState = endOfGamePage;
+        }
+        this.endOfGame = endOfGame;
+    }
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
     private final Player player;
+    private MouseListener mouseListener;
 
     private final TileManager tileM;
 
@@ -54,9 +71,12 @@ public class GamePanel extends JPanel{
     KeyHandler keyH = new KeyHandler(this); // instance KeyHandler from KeyHandler class
 
     Threat threat;
+    Loader loader;
+    Boss bossClass;
 
-
-
+    public Loader getLoader() {
+        return loader;
+    }
 
     UI ui;
     private int gameState;
@@ -65,6 +85,11 @@ public class GamePanel extends JPanel{
     private final int playState = 1;
     private final int mainMenu = 4;
     private final int nextLevelPage = 5;
+    private final int endOfGamePage = 6;
+
+    public int getEndOfGamePage() {
+        return endOfGamePage;
+    }
 
     public int getNextLevelPage() {
         return nextLevelPage;
@@ -122,6 +147,9 @@ public class GamePanel extends JPanel{
         tileM = new TileManager(this);
         player = new Player(this);
         player.setKeyHandler(keyH);
+        loader = new Loader(this);
+        bossClass = new Boss(this);
+        mouseListener = new MouseListener(this, loader, threat);
 
         ui = new UI(this);
         collision = new Collision(this, player);
@@ -129,11 +157,10 @@ public class GamePanel extends JPanel{
         gameState = mainMenu;
         addMouseListener();
 
-        // create the StartAndUpdate instance and pass the Player and TileManager instances to its constructor
-//        startAndUpdate = new StartAndUpdate(player, tileM);
     }
     public void startGameWithGameState(){
         if(gameState == playState){
+
             tileM.loadMapAndTileImage();
             player.setDefaultValues();
             player.getPlayerImage();
@@ -152,13 +179,41 @@ public class GamePanel extends JPanel{
         return bossEnemy;
     }
 
+    public void setBossEnemyOnNull() {
+        this.bossEnemy = null;
+    }
+
     public void setPositionOfEnemyToDoubleArray(){
-        enemyPositions = new int[numberOfEnemyInLevel][2];
-        enemyPositions[0][0] = 400;
-        enemyPositions[0][1] = 200;
-//        enemyPositions[1][0] = 300;
-//        enemyPositions[1][1] = 400;
-        setEnemyList();
+        actualLevel = loader.getLevelFromJson();
+        if(actualLevel == 1){
+            numberOfEnemyInLevel = 1;
+            enemyPositions = new int[numberOfEnemyInLevel][2];
+            enemyPositions[0][0] = 400;
+            enemyPositions[0][1] = 400;
+//            enemyPositions[1][0] = 500;
+//            enemyPositions[1][1] = 400;
+//            enemyPositions[2][0] = 600;
+//            enemyPositions[2][1] = 500;
+            setEnemyList();
+        }
+        if(actualLevel == 2){
+            enemies.clear();
+            setBoss(false);
+            numberOfEnemyInLevel = 2;
+            enemyPositions = new int[numberOfEnemyInLevel][2];
+            enemyPositions[0][0] = 400;
+            enemyPositions[0][1] = 400;
+            enemyPositions[1][0] = 500;
+            enemyPositions[1][1] = 400;
+//            enemyPositions[2][0] = 600;
+//            enemyPositions[2][1] = 500;
+//            enemyPositions[3][0] = 500;
+//            enemyPositions[3][1] = 500;
+//            enemyPositions[4][0] = 500;
+//            enemyPositions[4][1] = 400;
+            setEnemyList();
+        }
+
     }
     public void setEnemyList(){
         int row = 0;
@@ -185,13 +240,7 @@ public class GamePanel extends JPanel{
         }
     }
     public boolean checkIfIsTimeForBoss(){
-        for (Enemy enemy:
-             enemies) {
-            if(!enemy.isDeath()){
-                return false;
-            }
-        }
-        return true;
+        return bossClass.checkIfIsTimeForBoss(enemies);
     }
 
     public void update(){
@@ -212,58 +261,18 @@ public class GamePanel extends JPanel{
         }
 
     }
-    private void paintPageWithTwoButtons(Graphics2D g2, String text1, String text2){
-        // Set the background color to white
-        g2.setColor(Color.WHITE);
 
-        g2.fillRect(0, 0, screenWidth, screenHeight);
-
-        // Calculate the positions for the buttons
-        int buttonWidth = 200;
-        int buttonHeight = 50;
-        int buttonSpacing = 20;
-        int totalHeight = (buttonHeight + buttonSpacing) * 2 - buttonSpacing;
-        int startX = (screenWidth - buttonWidth) / 2;
-        int startY = (screenHeight - totalHeight) / 2;
-
-        // Draw the first button
-
-        RoundRectangle2D button1 = new RoundRectangle2D.Double(startX, startY, buttonWidth, buttonHeight, 20, 20);
-        g2.setColor(Color.BLACK);
-        g2.fill(button1);
-        g2.setColor(Color.WHITE);
-        FontMetrics fm1 = g2.getFontMetrics();
-        int textWidth1 = fm1.stringWidth(text1);
-        int textHeight1 = fm1.getHeight();
-        int textX1 = (int) (startX + buttonWidth / 2 - textWidth1 / 2);
-        int textY1 = (int) (startY + buttonHeight / 2 + textHeight1 / 2);
-        g2.drawString(text1, textX1, textY1);
-
-        // Draw the second button
-
-        RoundRectangle2D button2 = new RoundRectangle2D.Double(startX, startY + buttonHeight + buttonSpacing, buttonWidth, buttonHeight, 20, 20);
-        g2.setColor(Color.BLACK);
-        g2.fill(button2);
-        g2.setColor(Color.WHITE);
-        FontMetrics fm2 = g2.getFontMetrics();
-        int textWidth2 = fm2.stringWidth(text2);
-        int textHeight2 = fm2.getHeight();
-        int textX2 = (int) (startX + buttonWidth / 2 - textWidth2 / 2);
-        int textY2 = (int) (startY + buttonHeight + buttonSpacing + buttonHeight / 2 + textHeight2 / 2);
-        g2.drawString(text2, textX2, textY2);
-
-    }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);    // super means panel class of this method (JPanel)
         Graphics2D g2 = (Graphics2D) g; // convert g to 2D
         if(gameState == mainMenu){
-            paintPageWithTwoButtons(g2, "Start New Game", "Load Game");
+            ui.paintPageWithTwoButtons(g2, "Start New Game", "Load Game");
         } else if (gameState == nextLevelPage) {
-            paintPageWithTwoButtons(g2, "Next Level", "Main menu");
-        }
-        else{
-
+            ui.paintPageWithTwoButtons(g2, "Next Level", "Main menu");
+        } else if (gameState == endOfGamePage) {
+            ui.paintEndOfGamePage(g2, "END OF GAME", "Main Menu");
+        } else{
             tileM.drawing(g2); // it has to be before player.draw
             if(!boss){
                 for (Enemy enemy : enemies) {
@@ -281,25 +290,7 @@ public class GamePanel extends JPanel{
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (gameState == mainMenu) {
-
-                    int buttonWidth = 200;
-                    int buttonHeight = 50;
-                    int buttonSpacing = 20;
-                    int totalHeight = (buttonHeight + buttonSpacing) * 2 - buttonSpacing;
-                    int startX = (screenWidth - buttonWidth) / 2;
-                    int startY = (screenHeight - totalHeight) / 2;
-
-                    // Check if the "Start Game" button is clicked
-                    if (e.getX() >= startX && e.getX() <= startX + buttonWidth &&
-                            e.getY() >= startY && e.getY() <= startY + buttonHeight) {
-                        setGameState(playState);    // Change the game state to playState
-                        startGameWithGameState();
-                    }
-                }
-                if(gameState == nextLevelPage){
-                    System.out.println("clicked to next level button");
-                }
+                mouseListener.calculateButtonPositions(e);
             }
         });
     }

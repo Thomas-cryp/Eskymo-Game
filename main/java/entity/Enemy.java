@@ -1,13 +1,16 @@
 package entity;
 
+import Controller.Entity;
 import Controller.GamePanel;
-import Controller.KeyHandler;
-import Controller.Threat;
+import Model.Fight;
+import Model.KeyHandler;
+import Controller.Loader;
+import Model.Threat;
 import View.DrawBoss;
 import View.DrawEntity;
 import View.DrawLiveBar;
 
-import infoWidget.Weapons;
+import Controller.Weapons;
 
 import javax.imageio.ImageIO;
 
@@ -17,7 +20,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 
-public class Enemy extends Entity{
+public class Enemy extends Entity {
     GamePanel gp;
     DrawEntity drawEntity;
     KeyHandler keyH;
@@ -27,6 +30,7 @@ public class Enemy extends Entity{
     DrawLiveBar drawLiveBar;
     DrawBoss drawBoss;
     Threat threat;
+    Loader loader;
     private int damage = 0;
 
     public int getDamage() {
@@ -106,6 +110,7 @@ public class Enemy extends Entity{
         this.drawLiveBar = new DrawLiveBar(gp);
         this.drawBoss = new DrawBoss(gp);
         this.threat = gp.getThreat();
+        this.loader = gp.getLoader();
 
         if(gp.isBoss()){
             drawBoss.setBossPositionAndSize(this);
@@ -178,9 +183,6 @@ public class Enemy extends Entity{
 
     }
 
-//    public int addDamage(){ TODO
-//        return 0;
-//    }
     public boolean checkFightKeyPressed(){
         return keyH.fight;
     }
@@ -198,7 +200,6 @@ public class Enemy extends Entity{
 
         if(!gp.isBoss()){
             if(damage == 1){
-//            JOptionPane.showMessageDialog(null, "Death of first enemy");
                 death = true;
                 if(gp.checkIfIsTimeForBoss()){
                     gp.setBoss(true);
@@ -207,11 +208,17 @@ public class Enemy extends Entity{
             }
         }else{
 
-            if(damage == 2){
+            if(damage == 1){
                 death = true;
-                gp.setBoss(false);
+                if(loader.getLevelFromJson() == 2){
+                    gp.setEndOfGame(true);
+                }else{
+                    loader.updateLevelInJsonLoader((loader.getLevelFromJson() + 1));
+                    gp.setGameState(gp.getNextLevelPage());
+                }
+                gp.setBossEnemyOnNull();
                 threat.setStopGameLoop(true);
-                gp.setGameState(gp.getNextLevelPage());
+
             }
         }
 
@@ -220,13 +227,7 @@ public class Enemy extends Entity{
             if (checkFightKeyPressed()) {
                 keyH.fight = false;
                 if (timerToAttackKey() && !isFight) {
-                    if(weapons.isSword()){
-                        fight.swordFight();
-                    } else if (weapons.isBow()) {
-                        fight.bowFight();
-                    }else{
-                        fight.trapsFight();
-                    }
+                    fight.setWeaponsToFightState();
                 }
             } else if (calculateHypotenuse() < 30 && timerAfterAttackPlayerByEnemy()) {
                 player.setAttackByEnemy(true);

@@ -2,9 +2,9 @@ package View;
 
 import Controller.GamePanel;
 
-import Model.tile.LoadMap;
-import Model.tile.Tile;
-import Model.tile.TilesImport;
+import Model.LoadMap;
+import Controller.Tile;
+import Model.TilesImport;
 
 import java.awt.*;
 import java.util.Objects;

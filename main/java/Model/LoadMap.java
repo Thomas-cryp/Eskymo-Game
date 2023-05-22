@@ -1,4 +1,4 @@
-package Model.tile;
+package Model;
 
 import Controller.GamePanel;
 import java.io.BufferedReader;

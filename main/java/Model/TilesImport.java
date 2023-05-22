@@ -1,10 +1,15 @@
-package Model.tile;
+package Model;
+
+import Controller.Tile;
 
 import javax.imageio.ImageIO;
 import java.util.Objects;
 
-public class TilesImport extends Tile{
-    Tile[] tile;
+public class TilesImport extends Tile {
+    public TilesImport() {
+        getTileImage();
+    }
+
     public Tile[] getTileImage(){
         Tile[] tile = new Tile[10];
         try{

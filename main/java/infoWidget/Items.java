@@ -3,10 +3,9 @@ package infoWidget;
 
 
 import Controller.GamePanel;
-import Controller.KeyHandler;
+import Model.KeyHandler;
 import entity.Player;
 
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 public class Items extends Player {

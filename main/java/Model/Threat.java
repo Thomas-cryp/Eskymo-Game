@@ -1,4 +1,6 @@
-package Controller;
+package Model;
+
+import Controller.GamePanel;
 
 public class Threat implements Runnable{
     GamePanel gp;
@@ -41,12 +43,14 @@ public class Threat implements Runnable{
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if(delta >= 1 && !stopGameLoop){
+            if(delta >= 1 && !stopGameLoop) {
                 // Update info such as character position
                 gp.update();   // Draw the screen with the updated info
                 gp.repaint();  // it will call paintComponent method
                 delta--;
-
+            }
+            if(stopGameLoop){
+                delta--;
             }
             if(timer >= 1000000000){    // it will print every second
 //                System.out.println("FPS: " + drawCount);

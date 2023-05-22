@@ -2,7 +2,7 @@ package infoWidget;
 
 
 import Controller.GamePanel;
-import Controller.KeyHandler;
+import Model.KeyHandler;
 
 public class Coins extends Items{
     private int counter;

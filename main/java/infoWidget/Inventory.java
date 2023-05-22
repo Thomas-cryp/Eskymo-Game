@@ -1,7 +1,8 @@
 package infoWidget;
 
 import Controller.GamePanel;
-import Controller.KeyHandler;
+import Model.KeyHandler;
+import Controller.Weapons;
 
 public class Inventory extends Items{
     GamePanel gp;

@@ -1,8 +1,10 @@
-package entity;
+package Model;
 
 import Controller.GamePanel;
 import Controller.TileManager;
-import Model.tile.LoadMap;
+import entity.Enemy;
+import Controller.Entity;
+import entity.Player;
 
 public class Collision {
     GamePanel gp;
@@ -25,13 +27,11 @@ public class Collision {
         int playerX = player.getX();
         int playerY = player.getY();
         int leftColumn = (playerX + entity.solidArea.x) / gp.tileSize;
-
         int rightColumn = (playerX + entity.solidArea.x + entity.solidArea.width) / gp.tileSize;
         int topRow = (playerY + entity.solidArea.y) / gp.tileSize;
-
         int bottomRow = (playerY + entity.solidArea.y + entity.solidArea.height) / gp.tileSize;
-
         int tileNum1, tileNum2;
+
         if (fakeEntityDirection == null){
             switchDirection = entity.direction;
         }else{

@@ -1,8 +1,10 @@
-package infoWidget;
+package Controller;
 
-import Controller.GamePanel;
-import Controller.KeyHandler;
+import Model.BowAndArrow;
+import Model.KeyHandler;
+import Model.Traps;
 import View.DrawWeapon;
+import entity.Enemy;
 import entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,8 +22,23 @@ public class Weapons{   // TODO extends on ITEM class
     GamePanel gp;
     File jsonFile;
 
+    public DrawWeapon getDrawWeapon() {
+        return drawWeapon;
+    }
+    BowAndArrow bowAndArrow;
+    Traps trapsClass;
+
+    public Traps getTraps() {
+        return trapsClass;
+    }
+
+    public BowAndArrow getBowAndArrow() {
+        return bowAndArrow;
+    }
+
     JSONObject data;
     DrawWeapon drawWeapon;
+    Player player;
     boolean sword;
     boolean bow;
     boolean traps;
@@ -36,20 +53,22 @@ public class Weapons{   // TODO extends on ITEM class
         this.weaponToFightPosition = weaponToFightPosition;
     }
 
-    public boolean isEndOfArrow() {
-        return endOfArrow;
-    }
 
-    public Weapons(GamePanel gp) {
+    public Weapons(GamePanel gp, Player player) {
         this.gp = gp;
         this.drawWeapon = new DrawWeapon(gp);
-        this.jsonFile = new File("/Users/tomasjelsik/Desktop/Škola II.sem./PJV/semestrálka/PJV_semestralka/src/main/java/infoWidget/actualWeapons.json");   // TODO absolut path
+        this.jsonFile = new File("JSONs/actualWeapons.json");   // TODO absolut path
+        this.bowAndArrow = new BowAndArrow(gp, player, this);
+        this.trapsClass = new Traps(gp, player, this);
         fileReader();
     }
-    public void getActualWeapon() {
-        fileReader();
+    public void increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(Enemy enemy){
+        int damage = enemy.getDamage();
+        damage ++;
+        enemy.setDamage(damage);
+        enemy.setFight(true);
     }
-    public void fileReader(){
+    private void fileReader(){
         JSONParser parser = new JSONParser();
         try (FileReader reader = new FileReader(jsonFile)) {
             data = (JSONObject) parser.parse(reader);
@@ -69,10 +88,13 @@ public class Weapons{   // TODO extends on ITEM class
         return sword;
     }
 
-    public void setSword() {
-        data.put("sword", true);
-        data.put("bow", false);
-        data.put("traps", false);
+    private void setSword() {
+        setWeapon(true, false, false);
+    }
+    public void setWeapon(boolean value1, boolean value2, boolean value3){
+        data.put("sword", value1);
+        data.put("bow", value2);
+        data.put("traps", value3);
         writeFile();
     }
 
@@ -81,23 +103,15 @@ public class Weapons{   // TODO extends on ITEM class
         return bow;
     }
 
-    public void setBow() {
-
-        data.put("sword", false);
-        data.put("bow", true);
-        data.put("traps", false);
-        writeFile();
-
+    private void setBow() {
+        setWeapon(false, true, false);
     }
     public boolean isTraps() {
         traps = (boolean) data.getOrDefault("traps", false);
         return traps;
     }
-    public void setTraps() {
-        data.put("sword", false);
-        data.put("bow", false);
-        data.put("traps", true);
-        writeFile();
+    private void setTraps() {
+        setWeapon(false, false, true);
     }
     public void listenerForChangeTheWeapon(KeyHandler keyH){
         if(keyH.number1){
@@ -113,8 +127,8 @@ public class Weapons{   // TODO extends on ITEM class
     public void setDefaultValuesOfWeapons(){
         setSword();
     }
-
     public void draw(Graphics g2, Player player){
         drawWeapon.finalDraw(g2, this, player);
     }
+
 }

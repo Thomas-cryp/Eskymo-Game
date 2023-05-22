@@ -1,10 +1,12 @@
 package entity;
 
+import Controller.Entity;
 import Controller.GamePanel;
-import Controller.KeyHandler;
+import Model.Collision;
+import Model.KeyHandler;
 import View.DrawEntity;
 import infoWidget.Hearts;
-import infoWidget.Weapons;
+import Controller.Weapons;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Player extends Entity{
+public class Player extends Entity {
     GamePanel gp;
 
     KeyHandler keyH;
@@ -52,7 +54,7 @@ public class Player extends Entity{
         solidArea.y = 16;
         solidArea.width = 32;
         solidArea.height = 32;
-        this.weapons = new Weapons(gp);
+        this.weapons = new Weapons(gp, this);
         this.hearts = new Hearts(gp);
         this.collisionChecker = new Collision(gp, this);
         this.drawEntity = new DrawEntity(gp);
@@ -108,6 +110,7 @@ public class Player extends Entity{
     }
 
     public void update(){
+
         timerToAttackKey ++;
         if(attackByEnemy){
             timerForMovingBack ++;

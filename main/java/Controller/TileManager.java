@@ -1,9 +1,8 @@
 package Controller;
 
 
-import Model.tile.LoadMap;
-import Model.tile.Tile;
-import Model.tile.TilesImport;
+import Model.LoadMap;
+import Model.TilesImport;
 import View.DrawMap;
 
 import java.awt.*;
