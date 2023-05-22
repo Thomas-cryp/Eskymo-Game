@@ -39,6 +39,11 @@ public class DrawBoss {
             e.printStackTrace();
         }
     }
+    /**
+     * @param g2 is the graphics object
+     * @param enemy is the enemy object
+     * This method draws the boss pictures and change it for moving effect
+     */
     public void draw(Graphics g2, Enemy enemy){
         int x = enemy.getX();
         int y = enemy.getY();

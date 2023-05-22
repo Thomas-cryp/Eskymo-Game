@@ -11,6 +11,12 @@ public class Moving {
         this.gp = gp;
         this.enemy = enemy;
     }
+
+    /**
+     * calculate direction of enemy. Depends on dx and dy. It changes spriteNumber and spriteCounter for change picture of enemy.
+     * @param dx - difference between x position of enemy and x position of player.
+     * @param dy - difference between y position of enemy and y position of player.
+     */
     public void updateImageMoving(double dx, double dy){
 
         if (Math.abs(dx) > Math.abs(dy)) {
@@ -40,11 +46,17 @@ public class Moving {
             enemy.setSpriteCounter(0);
         }
     }
+    /**
+     * update image of enemy on default values in spawn space.
+     */
     public void updateEnemyImageOnDefaultValues(){
         switch (enemy.getDirection()){
             case "up", "down", "right", "left" -> enemy.setDirection("neutralDown");
         }
     }
+    /**
+     * update image of enemy on default values.
+     */
     public void updateImageStanding(){
         switch (enemy.getDirection()){
             case "up" -> enemy.setDirection("neutralUp");
@@ -53,6 +65,12 @@ public class Moving {
             case "left" -> enemy.setDirection("neutralLeft");
         }
     }
+    /**
+     * move enemy on shortest path to player.
+     * @param targetX - x position of player
+     * @param targetY - y position of player
+     * @param speed - speed of enemy
+     */
     public void moveShortestPath(int targetX, int targetY, int speed){
         int xEnemy = enemy.getX();
         int yEnemy = enemy.getY();

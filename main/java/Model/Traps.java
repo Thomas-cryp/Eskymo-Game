@@ -31,7 +31,7 @@ public class Traps {
         this.drawWeapon = weapons.getDrawWeapon();
         loadImageFormResourcesArrowAndBow();
     }
-    public void loadImageFormResourcesArrowAndBow() {
+    private void loadImageFormResourcesArrowAndBow() {
         try {
             arrUpTrap = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/arr_up.png")));
             arrDownTrap = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/arr_down.png")));
@@ -47,23 +47,27 @@ public class Traps {
             e.printStackTrace();
         }
     }
-    public void settingForUpAndDownBow() {
+    private void settingForUpAndDownBow() {
         widthBow = 45;
         heightBow = 21;
     }
-    public void settingForUpAndDownArray(){
+    private void settingForUpAndDownArray(){
         widthArr = 15;
         heightArr = 39;
     }
-    public void settingForLeftAndRightBow() {
+    private void settingForLeftAndRightBow() {
         widthBow = 21;
         heightBow = 45;
     }
-    public void settingForLeftAndRightArray(){
+    private void settingForLeftAndRightArray(){
         widthArr = 39;
         heightArr = 15;
     }
-    public void drawTraps(){    // TODO better picture
+
+    /**
+     * draw trap image and set the location of it if the player is moving and fight is not active
+     */
+    public void drawTraps(){
         playerX = player.getX();
         playerY = player.getY();
         switch (player.direction) {
@@ -96,6 +100,10 @@ public class Traps {
             }
         }
     }
+
+    /**
+     * if the attack is active, the trap will be drawn and the counter will be increased. the trap will be drawn on the location of the player
+     */
     public void holdTheTrapsAndStartCounting(){
         counterForTrap ++;
         drawTraps();
@@ -136,10 +144,17 @@ public class Traps {
 
 
     }
+
+    /**
+     * check if is hypotenuse of the trap is less than 100, the damages of the enemy will be decreased. It is separate for boss and other enemies
+     */
     public void bombExplosion(){
         ArrayList<Enemy> enemies = gp.getEnemies();
         if(gp.isBoss()){
-            weapons.increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(gp.getBossEnemy());
+            Fight fight = new Fight(gp, player, gp.getBossEnemy());
+            if(fight.calculateHypotenuseForTrap(xArr, yArr) < 100){
+                weapons.increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(gp.getBossEnemy());
+            }
         }else{
             for (Enemy enemy:
                     enemies) {

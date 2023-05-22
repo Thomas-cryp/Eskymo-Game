@@ -84,6 +84,11 @@ public class GamePanel extends JPanel{
             e.printStackTrace();
         }
     }
+    /**
+     * Starts the game based on the current game state.
+     * If the game state is playState, it loads the map, sets default player values,
+     * retrieves the player image, and starts the game thread.
+     */
     public void startGameWithGameState(){
         if(gameState == playState){
             tileM.loadMapAndTileImage();
@@ -94,11 +99,15 @@ public class GamePanel extends JPanel{
 
         }
     }
-
+    /**
+     * Creates a boss enemy for the game.
+     */
     public void createBoss(){
         bossEnemy = new Enemy(this, player);
     }
-
+    /**
+     * Sets the boss enemy to null.
+     */
     public void setBossEnemyOnNull() {
         this.bossEnemy = null;
     }
@@ -153,10 +162,19 @@ public class GamePanel extends JPanel{
 
         }
     }
+
+    /**
+     * Call another method in the boss class to check if it is time for the boss to appear.
+     * @return boolean value if it is time for the boss to appear.
+     */
     public boolean checkIfIsTimeForBoss(){
         return bossClass.checkIfIsTimeForBoss(enemies);
     }
 
+    /**
+     * Updates the game state by calling the update methods of player and enemies.
+     * If the game state is inventoryState, it handles weapon changes. It is called by the game thread.
+     */
     public void update(){
         if(gameState == playState){
             player.update();    //call method for update game
@@ -174,7 +192,11 @@ public class GamePanel extends JPanel{
 
     }
 
-
+    /**
+     * Draws the game based on the current game state. It checked the game state and call the right method.
+     * If is boss state, it draws the boss enemy.
+     * @param g the graphics object
+     */
     public void paintComponent(Graphics g){
         super.paintComponent(g);    // super means panel class of this method (JPanel)
         Graphics2D g2 = (Graphics2D) g; // convert g to 2D
@@ -206,6 +228,11 @@ public class GamePanel extends JPanel{
             }
         });
     }
+
+    /**
+     * setter for the end of game state. If the end of game state is true, it sets the game state to end of game page.
+     * @param endOfGame boolean value
+     */
     public void setEndOfGame(boolean endOfGame) {
         if(endOfGame){
             gameState = endOfGamePage;

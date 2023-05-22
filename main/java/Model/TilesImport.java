@@ -10,6 +10,10 @@ public class TilesImport extends Tile {
         getTileImage();
     }
 
+    /**
+     * get image of tiles from resources. It also set collision for some tiles.
+     * @return - array of tiles
+     */
     public Tile[] getTileImage(){
         Tile[] tile = new Tile[10];
         try{

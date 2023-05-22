@@ -63,6 +63,11 @@ public class BowAndArrow {
         widthArr = 39;
         heightArr = 15;
     }
+
+    /**
+     * this method calculate bow and arrow positions in static position when is K key false.
+     * it depends on player direction. it changes bow and arrow images and positions in drawWeapon class.
+     */
     public void drawBowAndArrowInStatic(){
         playerX = player.getX();
         playerY = player.getY();
@@ -112,6 +117,12 @@ public class BowAndArrow {
         }
 
     }
+
+    /**
+     * this method check depends on arrow direction, arrow position and enemy position, if arrow hit enemy or not.
+     * @param direction - direction of arrow
+     * @param enemy - enemy object
+     */
     private void calculateCollisionArrayWithEnemy(String direction, Enemy enemy){
         int largeOfEnemy;
         if(gp.isBoss()){
@@ -151,6 +162,11 @@ public class BowAndArrow {
             }
         }
     }
+
+    /**
+     * this method iterate through enemies array and check if arrow hit enemy or not. if the boss is alive, it checks only him.
+     * @param direction - direction of arrow
+     */
     public void checkerForCollisionEnemyWithArray(String direction){
         if(gp.isBoss()){
             calculateCollisionArrayWithEnemy(direction, drawWeapon.getBossEnemy());
@@ -162,6 +178,11 @@ public class BowAndArrow {
             }
         }
     }
+
+    /**
+     * this method is called when arrow hit enemy. it increases damage for specified enemy and set fight boolean value for specified enemy.
+     * @param enemy - enemy object
+     */
     public void attackWasSuccessful(Enemy enemy){
         if(gp.isBoss()){
             enemy = drawWeapon.getBossEnemy();
@@ -170,6 +191,10 @@ public class BowAndArrow {
         weapons.setWeaponToFightPosition(false);
         directionOfArrow = null;
     }
+
+    /**
+     * load direction of arrow from player direction. Depends on arrow direction, it changes arrow position and check if arrow hit enemy or not.
+     */
     public void fireArrowDrawMethod() {
         playerX = player.getX();
         playerY = player.getY();
@@ -255,6 +280,10 @@ public class BowAndArrow {
             }
         }
     }
+
+    /**
+     * load direction of arrow from player direction.
+     */
     public void loadDirectionOfArrow(){
         switch (player.direction) {
             case "up", "neutralUp" -> directionOfArrow = "up";

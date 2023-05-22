@@ -26,9 +26,20 @@ public class DrawLiveBar {
             e.printStackTrace();
         }
     }
+    /**
+     * draw heart after death of enemy on same place where the enemy was death
+     * @param g2 - graphics
+     * @param enemy - enemy
+     */
     public void drawHeartAfterDeathOFEnemy(Graphics g2, Enemy enemy){
         g2.drawImage(half, enemy.getX(), enemy.getY(), gp.getTileSize(), gp.getTileSize(), null);
     }
+
+    /**
+     * draw live bar at the top of the screen. it will read from array of hearts
+     * @param g2 - graphics
+     * @param actualArrayOfHearts - array of hearts for different type of hearts
+     */
     public void draw(Graphics g2, int[] actualArrayOfHearts){
         BufferedImage image;
         int x = 0;

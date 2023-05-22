@@ -30,6 +30,9 @@ public class Enemy extends Entity {
     Moving moving;
     private int damage = 0;
     private boolean death = false;
+
+
+
     private int x = 400;
     private int y = 400;
     private boolean drawing = true;
@@ -38,12 +41,9 @@ public class Enemy extends Entity {
     private int playerX, playerY;
     int toleranceForEnemyDefaultBack = 3;
     private boolean isFight;
-
     private int counterOfFreezeTime = 0;
     private boolean hittingByEnemy = false;
-
     private int timerForStandingAfterHitPlayer;
-
     private String direction;
     private int spriteNum = 1;
     private int spriteCounter = 0;
@@ -102,12 +102,16 @@ public class Enemy extends Entity {
         playerX = player.getX();
         playerY = player.getY();
     }
+    /**
+     * set the position of the enemy on the X and Y axis. It also set default position of the enemy, which is used when the enemy has to go back to spawn place.
+     * @param newX - new position of the enemy on the X axis.
+     * @param newY - new position of the enemy on the Y axis.
+     */
     public void setPositionEnemy(int newX, int newY){
         x = newX;
         y = newY;
         defaultX = newX;
         defaultY = newY;
-
     }
 
     private boolean checkFightKeyPressed(){
@@ -195,6 +199,9 @@ public class Enemy extends Entity {
             }
         }
     }
+    /**
+     * update the enemy. It checks if the enemy is fight with the player, if the enemy is hitting the player, if the enemy is on the default position, if the enemy is on the boss level and if the enemy is death.
+     */
     public void update(){
         checkerOnBossAndDamage();
         if(!death) {
@@ -205,7 +212,10 @@ public class Enemy extends Entity {
         }
     }
 
-
+    /**
+     * draw the enemy. It checks if the enemy is fight with the player, if the enemy is hitting the player, if the enemy is on the default position, if the enemy is on the boss level and if the enemy is death.
+     * @param g2 - Graphics2D
+     */
     public void draw(Graphics g2) {
         if(drawing && !gp.isBoss()){
             drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
@@ -226,74 +236,55 @@ public class Enemy extends Entity {
     public void setFight(boolean fight) {
         isFight = fight;
     }
-
     public int getSpriteNum() {
         return spriteNum;
     }
-
     public void setSpriteNum(int spriteNum) {
         this.spriteNum = spriteNum;
     }
-
     public int getSpriteCounter() {
         return spriteCounter;
     }
-
     public void setSpriteCounter(int spriteCounter) {
         this.spriteCounter = spriteCounter;
     }
-
     public String getDirection() {
         return direction;
     }
-
     public void setDirection(String direction) {
         this.direction = direction;
     }
     public int getDamage() {
         return damage;
     }
-
     public void setDamage(int damage) {
         this.damage = damage;
     }
-
-
     public boolean isDeath() {
         return death;
     }
-
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
     }
-
-
-
     public void setX(int x) {
         this.x = x;
     }
-
     public void setY(int y) {
         this.y = y;
     }
-
-
-
+    public void setDeath(boolean death) {
+        this.death = death;
+    }
     public void setDrawing(boolean drawing) {
         this.drawing = drawing;
     }
-
     public void setDefaultX(int defaultX) {
         this.defaultX = defaultX;
     }
-
-
     public void setDefaultY(int defaultY) {
         this.defaultY = defaultY;
     }
-
 }

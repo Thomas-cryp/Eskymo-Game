@@ -14,9 +14,7 @@ public class Fight{
     private int counterOfSlowestFrames = 30;
     private int playerX, playerY, enemyX, enemyY;
 
-    public void setCounterOfSlowestFrames(int counterOfSlowestFrames) {
-        this.counterOfSlowestFrames = counterOfSlowestFrames;
-    }
+
 
     public Fight(GamePanel gp, Player player, Enemy enemy) {
         this.gp = gp;
@@ -24,12 +22,11 @@ public class Fight{
         this.enemy = enemy;
         this.weapons = player.getWeapons();
     }
-    public void increaseDamageAndSetFightBooleanValue(Enemy enemy){
-        int damage = enemy.getDamage();
-        damage ++;
-        enemy.setDamage(damage);
-        enemy.setFight(true);
-    }
+
+    /**
+     * timer for freeze enemy after attack player.
+     * @return - true if counterOfSlowestFrames is in the end, false if not.
+     */
     public boolean timerAfterAttackPlayerByEnemy(){
         counterOfSlowestFrames ++;
         if(counterOfSlowestFrames >= 30){
@@ -43,6 +40,13 @@ public class Fight{
         enemyX = enemy.getX();
         enemyY = enemy.getY();
     }
+
+    /**
+     * calculate hypotenuse between trap and enemy for check if enemy is in range of trap.
+     * @param xWeapon - x position of trap.
+     * @param yWeapon - y position of trap.
+     * @return - distance between trap and enemy.
+     */
     public double calculateHypotenuseForTrap(int xWeapon, int yWeapon){
         setEnemyPosition();
         double distancePlayerAndEnemy;
@@ -51,6 +55,11 @@ public class Fight{
         distancePlayerAndEnemy = Math.sqrt(b * b + a * a);
         return distancePlayerAndEnemy;
     }
+
+    /**
+     * calculate hypotenuse between player and enemy for check if enemy is in range of player.
+     * @return - distance between player and enemy.
+     */
     public double calculateHypotenuse(){
 
         setPlayerPosition();
@@ -61,10 +70,19 @@ public class Fight{
         distancePlayerAndEnemy = Math.sqrt(b * b + a * a);
         return distancePlayerAndEnemy;
     }
+
+    /**
+     * set player position to calculate hypotenuse.
+     */
     public void setPlayerPosition(){
         playerX = player.getX();
         playerY = player.getY();
     }
+
+    /**
+     * timer for player when he is attacked by enemy. After 60 frames player can be attacked again.
+     * @return - boolean value if is over 60 frames.
+     */
     public boolean timerToAttackKey(){
         if(player.getTimerToAttackKey() >= 60){
             player.setTimerToAttackKey(0);
@@ -76,5 +94,7 @@ public class Fight{
     }
     public void setWeaponsToFightState(){
         weapons.setWeaponToFightPosition(true);
+    }public void setCounterOfSlowestFrames(int counterOfSlowestFrames) {
+        this.counterOfSlowestFrames = counterOfSlowestFrames;
     }
 }

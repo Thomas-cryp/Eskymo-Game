@@ -16,6 +16,12 @@ public class DrawMap{
     TilesImport ti;
     Tile[] tile;
 
+    /**
+     * Draws the map form the mapTileNumber two dimensional array
+     * @param g2 Graphics2D
+     * @param gp GamePanel
+     * @param mapTileNumber int[][]
+     */
     public void draw(Graphics2D g2, GamePanel gp, int[][] mapTileNumber){
         this.gp = Objects.requireNonNull(gp, "Game Panel cannot be null");
         lm = new LoadMap(gp);

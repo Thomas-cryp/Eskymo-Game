@@ -12,6 +12,11 @@ public class KeyHandler implements KeyListener {
 
     GamePanel gp;
 
+    /**
+     * Constructor for KeyHandler class.
+     * @param gp - GamePanel object.
+     */
+
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
@@ -19,6 +24,7 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
     }
+
 
     @Override
     public void keyPressed(KeyEvent e) {

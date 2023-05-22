@@ -22,6 +22,11 @@ public class Collision {
         lm.loadMap("/blocks/map01.txt");
         this.mapTileNumber = lm.getMapTileNumber();
     }
+    /**
+     * This method is called in Player class.
+     * It checks if player is colliding with map.
+     * @param entity - player or enemy object.
+     */
     public void checkMapPosition(Entity entity, String fakeEntityDirection){
         int playerX = player.getX();
         int playerY = player.getY();
@@ -72,6 +77,12 @@ public class Collision {
             }
         }
     }
+    /**
+     * This method is called in Player class.
+     * It checks if player is colliding with heart after death of enemy.
+     * @param player - player object.
+     * @param enemy - enemy object. enemy after death has the same x and y value as heart.
+     */
     public boolean compareXAndYValueForCollisionBetweenPlayerAndHeart(Player player, Enemy enemy) {
         int centerXOfPlayer = player.getX() + (gp.getTileSize()/2);
         int centerYOfPlayer = player.getY() + (gp.getTileSize()/2);

@@ -46,12 +46,24 @@ public class Player extends Entity {
         this.collisionChecker = new Collision(gp, this);
         this.drawEntity = new DrawEntity(gp);
     }
+    /**
+     * This method is called when the player is attacked by an enemy.
+     */
     public void callHeartsClassAndDecreaseNumberOfHearts(){
         hearts.decreaseNumberOfHearts();
     }
+
+    /**
+     * set keyHandler from GamePanel class in start of new game.
+     * @param keyHandler
+     */
     public void setKeyHandler(KeyHandler keyHandler) {
         keyH = keyHandler;
     }
+
+    /**
+     * set player's default position, speed, direction, weapons and actualHearts.
+     */
     public void setDefaultValues(){ // set player's default position
         x = 100;
         y = 100;
@@ -61,6 +73,12 @@ public class Player extends Entity {
         hearts.getLengthOfHeartsAndSetArray(actualHearts.length);
         weapons.setDefaultValuesOfWeapons();
     }
+
+    /**
+     * checker for collision between player and heart after enemy death.
+     * @param enemy - enemy coordinates are after death similar to heart coordinates.
+     * @return - true if collision is detected, false if not.
+     */
     public boolean checkCollisionWithHearts(Enemy enemy){
         if(!collisionChecker.compareXAndYValueForCollisionBetweenPlayerAndHeart(this, enemy)){
             return false;
@@ -69,6 +87,10 @@ public class Player extends Entity {
             return true;
         }
     }
+
+    /**
+     * load player's images and set BufferedImage variables.
+     */
     public void getPlayerImage(){
         try{
             up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_1.png")));
@@ -166,6 +188,10 @@ public class Player extends Entity {
             case "left" -> direction = "neutralLeft";
         }
     }
+
+    /**
+     * Update every frame. It checks if player is attacked by enemy, if player is moving or not and if player is moving it checks collision.
+     */
     public void update(){
 
         timerToAttackKey ++;
@@ -178,6 +204,10 @@ public class Player extends Entity {
             setNeutralDirection();
         }
     }
+    /**
+     * Draw player's image.
+     * @param g2 - Graphics2D
+     */
     public void draw(Graphics g2){
         drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
         weapons.draw(g2, this);

@@ -14,6 +14,10 @@ public class Loader {
     public Loader(GamePanel gp) {
         this.gp = gp;
     }
+    /**
+     * Updates the level value in the JSON file.
+     * @param newLevel The new level value
+     */
     public void updateLevelInJsonLoader(int newLevel) {
         try {
             // Read the JSON file
@@ -39,6 +43,10 @@ public class Loader {
             // Handle the exception appropriately
         }
     }
+    /**
+     * Gets the level value from the JSON file.
+     * @return The level value
+     */
     public int getLevelFromJson() {
         try {
             // Read the JSON file

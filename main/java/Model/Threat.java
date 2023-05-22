@@ -17,6 +17,9 @@ public class Threat implements Runnable{
         this.stopGameLoop = stopGameLoop;
     }
 
+    /**
+     * create new Thread and start it.
+     */
     public void startGameThread(){
         gameThread = new Thread(this);  // we are passing GamePanel to this constructor
         gameThread.start(); // it will call run method
@@ -24,6 +27,9 @@ public class Threat implements Runnable{
 
     // if we start some Thread, it will automatically call this method
     // using Delta/Accumulator method
+    /**
+     * This method is called when the game is started. It is called from startGameThread method.
+     */
     @Override
     public void run() {
 

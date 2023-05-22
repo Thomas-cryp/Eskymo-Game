@@ -14,6 +14,11 @@ public class LoadMap{
         this.gp = gp;
 
     }
+
+    /**
+     * This method loads map from map file and saves it in mapTileNumber array.
+     * @param file - map file. It is in resources folder.
+     */
     public void loadMap(String file){
 
         mapTileNumber = new int[gp.getMaxScreenColumn()][gp.getMaxScreenRow()];
@@ -43,9 +48,9 @@ public class LoadMap{
         }
         br.close();
 
-    }catch(IOException e){
-        throw new RuntimeException(e);
-    }
+        }catch(IOException e){
+            throw new RuntimeException(e);
+        }
     }
     public int[][] getMapTileNumber() {
         return mapTileNumber;

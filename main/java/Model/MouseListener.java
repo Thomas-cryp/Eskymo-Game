@@ -13,6 +13,11 @@ public class MouseListener {
         this.loader = loader;
         this.threat = threat;
     }
+    /**
+     * This method is called in GamePanel class.
+     * It checks if the mouse is clicked on the button.
+     * @param e - MouseEvent object.
+     */
     public void calculateButtonPositions(MouseEvent e){
         int buttonWidth = 200;
         int buttonHeight = 50;

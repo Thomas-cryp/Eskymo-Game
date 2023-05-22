@@ -160,6 +160,12 @@ public class DrawWeapon {
 
     }
 
+    /**
+     * draw weapon in play state. it depends on the weapon that player has active. if the boss is active it will create the bossEnemy object
+     * @param g2 - graphics2D
+     * @param weapons - weapons object
+     * @param player - player object
+     */
     public void finalDraw(Graphics g2, Weapons weapons, Player player){
         if(gp.isBoss()){
             this.bossEnemy = gp.getBossEnemy();

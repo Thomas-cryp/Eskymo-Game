@@ -24,11 +24,16 @@ public class UI {
         buttonWidth = 200;
         buttonHeight = 50;
     }
+
+    /**
+     * draw the pause state screen. when the pause button is pressed
+     * draw the inventory screen. when the inventory button is pressed
+     * @param g2 - The graphics object
+     */
     public void draw(Graphics2D g2){
         this.g2 = g2;
         g2.setFont(font1);
         g2.setColor(Color.BLACK);
-
 
         if(gp.getGameState() == gp.getPauseState()){
             drawingPauseStateScreen();
@@ -37,6 +42,10 @@ public class UI {
             drawingInventorySite();
         }
     }
+
+    /**
+     * draw the pause state screen. when the inventory button is pressed
+     */
     public void drawingInventorySite() {
         String text = "INVENTORY";
         String text1 = "press 1 to change to sword";
@@ -60,7 +69,7 @@ public class UI {
 
     }
 
-    public void drawingPauseStateScreen(){
+    private void drawingPauseStateScreen(){
         String text = "GAME IS PAUSED";
         g2.setFont(font1);
         g2.setColor(Color.BLACK);
@@ -69,10 +78,18 @@ public class UI {
         g2.drawString(text, x, y);
 
     }
-    public int halfWidthOfTheScreenWithText(String text){
+
+    private int halfWidthOfTheScreenWithText(String text){
         int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return gp.getScreenWidth()/2 - length/2;
     }
+
+    /**
+     * Paints the start of game page with two buttons with given texts.
+     * @param g2 - The graphics object
+     * @param text1 - The text to be displayed on the first button
+     * @param text2 - The text to be displayed on the second button
+     */
     public void paintPageWithTwoButtons(Graphics2D g2, String text1, String text2){
         setAndShowFirstButton(g2, text1);
 
@@ -91,6 +108,11 @@ public class UI {
     public void paintPageWithOneButton(Graphics2D g2, String text){
         setAndShowFirstButton(g2, text);
     }
+    /**
+     * Paints the end of game page with the given text in the center of the screen
+     * @param g2   The graphics object
+     * @param text The text to be displayed
+     */
     public void paintEndOfGamePage(Graphics2D g2, String text) {
         // Set the background color to white
         g2.setColor(Color.WHITE);
