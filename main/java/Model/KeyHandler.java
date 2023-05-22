@@ -4,13 +4,12 @@ import Controller.GamePanel;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.logging.Logger;
+
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed, inventory, fight, esc, pause, number1, number2, number3;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, fight, number1, number2, number3;
 
-//    private static final Logger LOGGER = Logger.getLogger(KeyHandler.class.getName());  TODO
     GamePanel gp;
 
     public KeyHandler(GamePanel gp) {
@@ -27,39 +26,34 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if(code == KeyEvent.VK_W){
-//            LOGGER.info("Pressed W");
             upPressed = true;
         }
         if(code == KeyEvent.VK_S){
-//            LOGGER.info("Pressed S");
             downPressed = true;
         }
         if(code == KeyEvent.VK_A){
-//            LOGGER.info("Pressed A");
+
             leftPressed = true;
         }
         if(code == KeyEvent.VK_D){
-//            LOGGER.info("Pressed D");
             rightPressed = true;
         }
         if(code == KeyEvent.VK_K){
-//            LOGGER.info("Pressed K");
+            gp.getLogWriter().println("K key pressed"); // Log the message to the file
+            gp.getLogWriter().flush(); // Flush the PrintWriter to ensure the message is written immediately
             fight = true;
         }
         if(code == KeyEvent.VK_1){
-//            LOGGER.info("Pressed 1");
+
             number1 = true;
         }
         if(code == KeyEvent.VK_2){
-//            LOGGER.info("Pressed 1");
             number2 = true;
         }
         if(code == KeyEvent.VK_3){
-//            LOGGER.info("Pressed 3");
             number3 = true;
         }
         if(code == KeyEvent.VK_P){
-//            LOGGER.info("Pressed P");
             if(gp.getGameState() == gp.getPlayState()){
                 gp.setGameState(gp.getPauseState());
             } else if (gp.getGameState() == gp.getPauseState()) {
@@ -67,7 +61,6 @@ public class KeyHandler implements KeyListener {
             }
         }
         if(code == KeyEvent.VK_I){
-//            LOGGER.info("Pressed I");
             if(gp.getGameState() == gp.getPlayState()){
                 gp.setGameState(gp.getInventoryState());
             } else if (gp.getGameState() == gp.getInventoryState()) {

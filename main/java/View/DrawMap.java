@@ -28,17 +28,17 @@ public class DrawMap{
         int y = 0;
 
 
-        while(col < gp.maxScreenColumn && row < gp.maxScreenRow){
+        while(col < gp.getMaxScreenColumn() && row < gp.getMaxScreenRow()){
 
             int tileNumber = mapTileNumber[col][row];
-            g2.drawImage(tile[tileNumber].image, x, y, gp.tileSize, gp.tileSize, null);
-            x += gp.tileSize;
+            g2.drawImage(tile[tileNumber].image, x, y, gp.getTileSize(), gp.getTileSize(), null);
+            x += gp.getTileSize();
             col ++;
 
-            if(col == gp.maxScreenColumn){
+            if(col == gp.getMaxScreenColumn()){
                 col = 0;
                 x = 0;
-                y += gp.tileSize;
+                y += gp.getTileSize();
                 row ++;
             }
 

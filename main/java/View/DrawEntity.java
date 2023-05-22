@@ -48,9 +48,7 @@ public class DrawEntity {
                     image = right2;
                 }
             }
-            case "death" -> {
-                image = iceAfterHit;
-            }
+            case "death" -> image = iceAfterHit;
             case "neutralUp" -> image = upNeutral;
             case "neutralDown" -> image = downNeutral;
             case "neutralRight" -> image = rightNeutral;
@@ -59,9 +57,9 @@ public class DrawEntity {
         }
 
 
-            g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null);
             if(isFight && !death){
-                g2.drawImage(iceAfterHit, x, y, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(iceAfterHit, x, y, gp.getTileSize(), gp.getTileSize(), null);
             }
     }
 }

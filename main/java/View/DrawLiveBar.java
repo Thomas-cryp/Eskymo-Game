@@ -1,7 +1,7 @@
 package View;
 
 import Controller.GamePanel;
-import entity.Enemy;
+import Controller.Enemy;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,7 +17,7 @@ public class DrawLiveBar {
         this.gp = gp;
         setImageFromResources();
     }
-    public void setImageFromResources(){
+    private void setImageFromResources(){
         try{
             full = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/liveBar/fullHeart.png")));
             half = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/liveBar/halfHeart.png")));
@@ -27,7 +27,7 @@ public class DrawLiveBar {
         }
     }
     public void drawHeartAfterDeathOFEnemy(Graphics g2, Enemy enemy){
-        g2.drawImage(half, enemy.getX(), enemy.getY(), gp.tileSize, gp.tileSize, null);
+        g2.drawImage(half, enemy.getX(), enemy.getY(), gp.getTileSize(), gp.getTileSize(), null);
     }
     public void draw(Graphics g2, int[] actualArrayOfHearts){
         BufferedImage image;
@@ -38,16 +38,16 @@ public class DrawLiveBar {
              actualArrayOfHearts) {
             if(i == 2){
                 image = full;
-                g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
-                x += gp.tileSize;
+                g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null);
+                x += gp.getTileSize();
             } else if ( i == 1){
                 image = half;
-                g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
-                x += gp.tileSize;
+                g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null);
+                x += gp.getTileSize();
             }else{
                 image = empty;
-                g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
-                x += gp.tileSize;
+                g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null);
+                x += gp.getTileSize();
             }
         }
     }

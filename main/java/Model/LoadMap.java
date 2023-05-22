@@ -16,7 +16,7 @@ public class LoadMap{
     }
     public void loadMap(String file){
 
-        mapTileNumber = new int[gp.maxScreenColumn][gp.maxScreenRow];
+        mapTileNumber = new int[gp.getMaxScreenColumn()][gp.getMaxScreenRow()];
 
         try(InputStream is = getClass().getResourceAsStream(file)){
 
@@ -26,17 +26,17 @@ public class LoadMap{
         int column = 0;
         int row = 0;
 
-        while(column < gp.maxScreenColumn && row < gp.maxScreenRow){
+        while(column < gp.getMaxScreenColumn() && row < gp.getMaxScreenRow()){
             String line = br.readLine();
 
-            while(column < gp.maxScreenColumn){
+            while(column < gp.getMaxScreenColumn()){
                 String[] numbers = line.split(" ");
                 int num = Integer.parseInt(numbers[column]);
                 mapTileNumber[column][row] = num;
                 column ++;
 
             }
-            if(column == gp.maxScreenColumn){
+            if(column == gp.getMaxScreenColumn()){
                 column = 0;
                 row ++;
             }

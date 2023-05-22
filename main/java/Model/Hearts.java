@@ -1,4 +1,4 @@
-package infoWidget;
+package Model;
 
 import Controller.GamePanel;
 
@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 
-public class Hearts{ // TODO extends ITEM
+public class Hearts{
     private int[] actualHeartsArray;
 
     int defaultHearts;
@@ -49,11 +49,10 @@ public class Hearts{ // TODO extends ITEM
             }
             if(fullHeart){
                 int potentialIndex = actualIndex - 1;
-                if(potentialIndex < 0){
-                }else{
+                if(potentialIndex >= 0){
                     if(actualHeartsArray[potentialIndex] == 1){
-                        actualHeartsArray[potentialIndex] = 2;
-                    }
+                    actualHeartsArray[potentialIndex] = 2;
+                }
                     if(actualHeartsArray[potentialIndex] == 0){
                         actualHeartsArray[potentialIndex] = 1;
                     }
@@ -63,7 +62,6 @@ public class Hearts{ // TODO extends ITEM
             }
         }
     }
-
     public void draw(Graphics g2){
         drawLiveBar.draw(g2, actualHeartsArray);
     }

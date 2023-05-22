@@ -3,8 +3,8 @@ package Model;
 import Controller.GamePanel;
 import Controller.Weapons;
 import View.DrawWeapon;
-import entity.Enemy;
-import entity.Player;
+import Controller.Enemy;
+import Controller.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -31,7 +31,7 @@ public class BowAndArrow {
         this.drawWeapon = weapons.getDrawWeapon();
         loadImageFormResourcesArrowAndBow();
     }
-    public void loadImageFormResourcesArrowAndBow() {
+    private void loadImageFormResourcesArrowAndBow() {
         try {
             arrUp = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/arr_up.png")));
             arrDown = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/arr_down.png")));
@@ -47,19 +47,19 @@ public class BowAndArrow {
             e.printStackTrace();
         }
     }
-    public void settingForUpAndDownBow() {
+    private void settingForUpAndDownBow() {
         widthBow = 45;
         heightBow = 21;
     }
-    public void settingForUpAndDownArray(){
+    private void settingForUpAndDownArray(){
         widthArr = 15;
         heightArr = 39;
     }
-    public void settingForLeftAndRightBow() {
+    private void settingForLeftAndRightBow() {
         widthBow = 21;
         heightBow = 45;
     }
-    public void settingForLeftAndRightArray(){
+    private void settingForLeftAndRightArray(){
         widthArr = 39;
         heightArr = 15;
     }
@@ -84,7 +84,7 @@ public class BowAndArrow {
                 settingForUpAndDownArray();
                 xBow = playerX + 2;
                 xArr = xBow + ((widthBow - widthArr)/2);
-                yBow = playerY + (gp.tileSize) + 2;
+                yBow = playerY + (gp.getTileSize()) + 2;
                 yArr = yBow;
 
             }
@@ -106,7 +106,7 @@ public class BowAndArrow {
                 settingForLeftAndRightArray();
                 yBow = playerY + 2;
                 yArr = yBow + ((heightBow - heightArr)/2);
-                xBow = playerX + (gp.tileSize) + 2;
+                xBow = playerX + (gp.getTileSize()) + 2;
                 xArr = xBow;
             }
         }
@@ -117,7 +117,7 @@ public class BowAndArrow {
         if(gp.isBoss()){
             largeOfEnemy = 80;
         }else{
-            largeOfEnemy = gp.tileSize;
+            largeOfEnemy = gp.getTileSize();
         }
         switch (direction) {
             case "up" -> {
@@ -187,7 +187,7 @@ public class BowAndArrow {
                 xArr = drawWeapon.getStartX();
                 yArr -= 4;
 
-                if (yArr <= gp.tileSize) {
+                if (yArr <= gp.getTileSize()) {
                     weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
                 }
@@ -198,7 +198,7 @@ public class BowAndArrow {
                 xArr = drawWeapon.getStartX();
                 yArr += 4;
 
-                if (yArr + heightArr >= gp.screenHeight - gp.tileSize) {
+                if (yArr + heightArr >= gp.getScreenHeight() - gp.getTileSize()) {
                     weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
                 }
@@ -209,7 +209,7 @@ public class BowAndArrow {
                 yArr = drawWeapon.getStartY();
                 xArr -= 4;
 
-                if (xArr <= gp.tileSize) {
+                if (xArr <= gp.getTileSize()) {
                     weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
                 }
@@ -220,7 +220,7 @@ public class BowAndArrow {
                 yArr = drawWeapon.getStartY();
                 xArr += 4;
 
-                if (xArr + widthArr >= gp.screenWidth - gp.tileSize) {
+                if (xArr + widthArr >= gp.getScreenWidth() - gp.getTileSize()) {
                     weapons.setWeaponToFightPosition(false);
                     directionOfArrow = null;
                 }
@@ -238,7 +238,7 @@ public class BowAndArrow {
                 bow = bowDown;
                 settingForUpAndDownBow();
                 xBow = playerX + 2;
-                yBow = playerY + (gp.tileSize) + 2;
+                yBow = playerY + (gp.getTileSize()) + 2;
 
             }
             case "left", "neutralLeft" -> {
@@ -251,7 +251,7 @@ public class BowAndArrow {
                 bow = bowRight;
                 settingForLeftAndRightBow();
                 yBow = playerY + 2;
-                xBow = playerX + (gp.tileSize) + 2;
+                xBow = playerX + (gp.getTileSize()) + 2;
             }
         }
     }

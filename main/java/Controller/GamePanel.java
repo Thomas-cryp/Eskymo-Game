@@ -1,18 +1,13 @@
 package Controller;
-
 import Model.*;
 import View.UI;
-import entity.Enemy;
-
-import entity.Player;
-
-
 import javax.swing.*;
-
 import java.awt.*;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel{
@@ -20,65 +15,33 @@ public class GamePanel extends JPanel{
     // screen settings
     final int originalTitleSize = 16;   // 16x16 tile
     final int scale = 3;
-    public final int tileSize = scale * originalTitleSize; // 48x48 tile, one tile
-    public final int maxScreenColumn = 16;
-    public final int maxScreenRow = 12;
-    public final int screenWidth = tileSize * maxScreenColumn; // 768 pixels
-    public final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
-
-
-    public int getNumberOfEnemyInLevel() {
-        return numberOfEnemyInLevel;
-    }
-
-    public void setNumberOfEnemyInLevel(int numberOfEnemyInLevel1) {
-        this.numberOfEnemyInLevel = numberOfEnemyInLevel1;
-    }
-
-    // SET ENEMY
-    private int numberOfEnemyInLevel;  // TODO getter and setter
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-
+    private final int tileSize = scale * originalTitleSize; // 48x48 tile, one tile
+    private final int maxScreenColumn = 16;
+    private final int maxScreenRow = 12;
+    private final int screenWidth = tileSize * maxScreenColumn; // 768 pixels
+    private final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
+    private int numberOfEnemyInLevel;
+    private final ArrayList<Enemy> enemies = new ArrayList<>();
     private int[][] enemyPositions;
-    private int actualLevel;
-    private boolean endOfGame;
 
-    public boolean isEndOfGame() {
-        return endOfGame;
-    }
 
-    public void setEndOfGame(boolean endOfGame) {
-        if(endOfGame){
-            gameState = endOfGamePage;
-        }
-        this.endOfGame = endOfGame;
-    }
+    int actualLevel;
+    boolean endOfGame;
 
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
-    }
 
-    private final Player player;
-    private MouseListener mouseListener;
 
-    private final TileManager tileM;
 
-    public TileManager getTileM() {
-        return tileM;
-    }
 
-    private Collision collision;
+    Player player;
+    MouseListener mouseListener;
+    TileManager tileM;
     KeyHandler keyH = new KeyHandler(this); // instance KeyHandler from KeyHandler class
-
     Threat threat;
     Loader loader;
     Boss bossClass;
-
-    public Loader getLoader() {
-        return loader;
-    }
-
+    Enemy bossEnemy;
     UI ui;
+    private PrintWriter logWriter;
     private int gameState;
     private final int inventoryState = 3;
     private final int pauseState = 2;
@@ -86,55 +49,8 @@ public class GamePanel extends JPanel{
     private final int mainMenu = 4;
     private final int nextLevelPage = 5;
     private final int endOfGamePage = 6;
-
-    public int getEndOfGamePage() {
-        return endOfGamePage;
-    }
-
-    public int getNextLevelPage() {
-        return nextLevelPage;
-    }
-
-    public int getMainMenu() {
-        return mainMenu;
-    }
-
-    public int getInventoryState() {
-        return inventoryState;
-    }
-
-    public int getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(int gameState) {
-        this.gameState = gameState;
-    }
-
-    public int getPauseState() {
-        return pauseState;
-    }
-    public int getPlayState() {
-        return playState;
-    }
-    Enemy bossEnemy;
-
     private boolean boss;
 
-    public boolean isBoss() {
-        return boss;
-    }
-
-    public void setBoss(boolean boss) {
-        this.boss = boss;
-    }
-
-    public Threat getThreat() {
-        return threat;
-    }
-
-    //    StartAndUpdate startAndUpdate;
-    // constructor
     public GamePanel(){
 
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));    // size of the panel
@@ -150,40 +66,44 @@ public class GamePanel extends JPanel{
         loader = new Loader(this);
         bossClass = new Boss(this);
         mouseListener = new MouseListener(this, loader, threat);
-
         ui = new UI(this);
-        collision = new Collision(this, player);
 
         gameState = mainMenu;
         addMouseListener();
+        initializeNewPlayerAndLogger();
 
+    }
+    private void initializeNewPlayerAndLogger(){
+        // Initialize the log file
+        try {
+            logWriter = new PrintWriter(new FileWriter("JSONs/game.log", true));
+            logWriter.println(" ");
+            logWriter.println("New Player: "); // Add "New Player" message when a new game is started
+            logWriter.flush(); // Flush the PrintWriter to ensure the message is written immediately
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public void startGameWithGameState(){
         if(gameState == playState){
-
             tileM.loadMapAndTileImage();
             player.setDefaultValues();
             player.getPlayerImage();
             setPositionOfEnemyToDoubleArray();
             threat.startGameThread();
 
-        }else{
-            // TODO
         }
     }
 
     public void createBoss(){
         bossEnemy = new Enemy(this, player);
     }
-    public Enemy getBossEnemy(){
-        return bossEnemy;
-    }
 
     public void setBossEnemyOnNull() {
         this.bossEnemy = null;
     }
 
-    public void setPositionOfEnemyToDoubleArray(){
+    private void setPositionOfEnemyToDoubleArray(){
         actualLevel = loader.getLevelFromJson();
         if(actualLevel == 1){
             numberOfEnemyInLevel = 1;
@@ -215,24 +135,18 @@ public class GamePanel extends JPanel{
         }
 
     }
-    public void setEnemyList(){
+    private void setEnemyList(){
         int row = 0;
         int counter = 1;
         for (int i = 0; i < numberOfEnemyInLevel; i++) {
+            int x = enemyPositions[row][0];
+            int y = enemyPositions[row][1];
+            Enemy enemy = new Enemy(this, player);
+            enemy.setPositionEnemy(x, y);
+            enemies.add(enemy);
             if(counter == 1){
-                int x = enemyPositions[row][0];
-                int y = enemyPositions[row][1];
-                Enemy enemy = new Enemy(this, player);
-                enemy.setPositionEnemy(x, y);
-//                enemy.setKeyHandler(keyH);
-                enemies.add(enemy);
                 counter = 2;
             }else{
-                int x = enemyPositions[row][0];
-                int y = enemyPositions[row][1];
-                Enemy enemy = new Enemy(this, player);
-                enemy.setPositionEnemy(x, y);
-                enemies.add(enemy);
                 counter = 1;
             }
             row ++;
@@ -254,10 +168,8 @@ public class GamePanel extends JPanel{
                 bossEnemy.update();
             }
 
-        } else if (gameState == inventoryState) {
+        }if (gameState == inventoryState) {
             player.getWeapons().listenerForChangeTheWeapon(keyH);
-        } else{
-
         }
 
     }
@@ -269,9 +181,9 @@ public class GamePanel extends JPanel{
         if(gameState == mainMenu){
             ui.paintPageWithTwoButtons(g2, "Start New Game", "Load Game");
         } else if (gameState == nextLevelPage) {
-            ui.paintPageWithTwoButtons(g2, "Next Level", "Main menu");
+            ui.paintPageWithOneButton(g2, "Next Level");
         } else if (gameState == endOfGamePage) {
-            ui.paintEndOfGamePage(g2, "END OF GAME", "Main Menu");
+            ui.paintEndOfGamePage(g2, "END OF GAME");
         } else{
             tileM.drawing(g2); // it has to be before player.draw
             if(!boss){
@@ -286,12 +198,87 @@ public class GamePanel extends JPanel{
         }
         g2.dispose();
     }
-    public void addMouseListener() {
+    private void addMouseListener() {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 mouseListener.calculateButtonPositions(e);
             }
         });
+    }
+    public void setEndOfGame(boolean endOfGame) {
+        if(endOfGame){
+            gameState = endOfGamePage;
+        }
+        this.endOfGame = endOfGame;
+    }
+
+
+
+
+
+
+    public Enemy getBossEnemy(){
+        return bossEnemy;
+    }
+    public boolean isBoss() {
+        return boss;
+    }
+    public void setBoss(boolean boss) {
+        this.boss = boss;
+    }
+    public Threat getThreat() {
+        return threat;
+    }
+    public int getEndOfGamePage() {
+        return endOfGamePage;
+    }
+    public int getNextLevelPage() {
+        return nextLevelPage;
+    }
+    public int getMainMenu() {
+        return mainMenu;
+    }
+    public int getInventoryState() {
+        return inventoryState;
+    }
+    public int getGameState() {
+        return gameState;
+    }
+    public void setGameState(int gameState) {
+        this.gameState = gameState;
+    }
+    public int getPauseState() {
+        return pauseState;
+    }
+    public int getPlayState() {
+        return playState;
+    }
+    public Loader getLoader() {
+        return loader;
+    }
+    public PrintWriter getLogWriter() {
+        return logWriter;
+    }
+    public TileManager getTileM() {
+        return tileM;
+    }
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+    public int getTileSize() {
+        return tileSize;
+    }
+    public int getMaxScreenColumn() {
+        return maxScreenColumn;
+    }
+    public int getMaxScreenRow() {
+        return maxScreenRow;
+    }
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+    public int getScreenHeight() {
+        return screenHeight;
     }
 }

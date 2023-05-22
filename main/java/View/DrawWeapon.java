@@ -3,9 +3,9 @@ package View;
 import Controller.GamePanel;
 import Model.BowAndArrow;
 import Model.Traps;
-import entity.Enemy;
+import Controller.Enemy;
 
-import entity.Player;
+import Controller.Player;
 import Controller.Weapons;
 
 import javax.imageio.ImageIO;
@@ -53,7 +53,7 @@ public class DrawWeapon {
     private int playerX, playerY;
     private int xSword, ySword;
     private int widthSword, heightSword;
-    private BufferedImage sword, swordUp, swordRight, swordDown, swordLeft, sword45, sword90, sword135, sword180;
+    private BufferedImage sword, swordUp, swordRight, swordDown, swordLeft;
 
 
     public DrawWeapon(GamePanel gp) {
@@ -62,7 +62,7 @@ public class DrawWeapon {
 
     }
 
-    public void loadImageFormResourcesArrowAndBow() {
+    private void loadImageFormResourcesArrowAndBow() {
         try {
 
             swordUp = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_up.png")));
@@ -70,17 +70,12 @@ public class DrawWeapon {
             swordLeft = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_left.png")));
             swordRight = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_right.png")));
 
-            sword45 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_45.png")));
-            sword90 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_90.png")));
-            sword135 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_135.png")));
-            sword180 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/weapons/sword_180.png")));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setSword(){
+    private void setSword(){
         sword = swordUp;
         heightSword = 40;
         widthSword = 17;
@@ -91,11 +86,11 @@ public class DrawWeapon {
             }
             default -> {    // like "right" and "neutralRight"
                 ySword = playerY + 8;
-                xSword = (playerX + gp.tileSize) + 2;
+                xSword = (playerX + gp.getTileSize()) + 2;
             }
         }
     }
-    public void setSwordInAttack(){
+    private void setSwordInAttack(){
         counterForSword ++;
         if(counterForSword == 10){
             weapons.setWeaponToFightPosition(false);
@@ -107,15 +102,15 @@ public class DrawWeapon {
                 heightSword = 40;
                 widthSword = 17;
                 ySword = (playerY - heightSword - 2);
-                xSword = playerX + (gp.tileSize - widthSword)/2;
+                xSword = playerX + (gp.getTileSize() - widthSword)/2;
                 checkCollisionSwordWithEnemy();
             }
             case "down", "neutralDown" -> {
                 sword = swordDown;
                 heightSword = 40;
                 widthSword = 17;
-                ySword = (playerY + gp.tileSize) + 2;
-                xSword = playerX + (gp.tileSize - widthSword)/2;
+                ySword = (playerY + gp.getTileSize()) + 2;
+                xSword = playerX + (gp.getTileSize() - widthSword)/2;
                 checkCollisionSwordWithEnemy();
             }
             case "left", "neutralLeft" -> {
@@ -123,22 +118,22 @@ public class DrawWeapon {
                 heightSword = 17;
                 widthSword = 40;
                 xSword = playerX - 2 - widthSword;
-                ySword = playerY + (gp.tileSize - heightSword)/2;
+                ySword = playerY + (gp.getTileSize() - heightSword)/2;
                 checkCollisionSwordWithEnemy();
             }
             default -> {    // like "right" and "neutralRight"
                 sword = swordRight;
                 heightSword = 17;
                 widthSword = 40;
-                xSword = playerX + gp.tileSize + 2;
-                ySword = playerY + (gp.tileSize - heightSword)/2;
+                xSword = playerX + gp.getTileSize() + 2;
+                ySword = playerY + (gp.getTileSize() - heightSword)/2;
                 checkCollisionSwordWithEnemy();
             }
         }
     }
-    public void calculateCollisions(Enemy enemy, int toleranceWidth, int toleranceHeight, int centerOfSwordX, int centerOfSwordY){
-        int centerOfEnemyX = enemy.getX() + gp.tileSize/2;
-        int centerOfEnemyY = enemy.getY() + gp.tileSize/2;
+    private void calculateCollisions(Enemy enemy, int toleranceWidth, int toleranceHeight, int centerOfSwordX, int centerOfSwordY){
+        int centerOfEnemyX = enemy.getX() + gp.getTileSize()/2;
+        int centerOfEnemyY = enemy.getY() + gp.getTileSize()/2;
         if(Math.abs(centerOfSwordX - centerOfEnemyX) <= toleranceWidth){
             if(Math.abs(centerOfSwordY - centerOfEnemyY) <= toleranceHeight){
                 weapons.setWeaponToFightPosition(false);
@@ -150,8 +145,8 @@ public class DrawWeapon {
 
     private void checkCollisionSwordWithEnemy(){
         ArrayList<Enemy> enemies = gp.getEnemies();
-        int toleranceWidth = widthSword/2 + gp.tileSize/2;
-        int toleranceHeight = heightSword/2 + gp.tileSize/2;
+        int toleranceWidth = widthSword/2 + gp.getTileSize()/2;
+        int toleranceHeight = heightSword/2 + gp.getTileSize()/2;
         int centerOfSwordX = xSword + widthSword/2;
         int centerOfSwordY = ySword + heightSword/2;
         if(gp.isBoss()){
@@ -205,8 +200,6 @@ public class DrawWeapon {
                 }
                 g2.drawImage(sword, xSword, ySword, widthSword, heightSword, null);
             }
-        }else{
-
         }
     }
 }

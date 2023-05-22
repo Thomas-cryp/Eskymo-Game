@@ -3,8 +3,8 @@ package Model;
 import Controller.GamePanel;
 import Controller.Weapons;
 import View.DrawWeapon;
-import entity.Enemy;
-import entity.Player;
+import Controller.Enemy;
+import Controller.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,7 +22,7 @@ public class Traps {
     private int xBow, yBow, xArr, yArr;
     private BufferedImage arrUpTrap, arrDownTrap, arrLeftTrap, arrRightTrap, bowUp, bowDown, bowRight, bowLeft, bow, arrow;
     private int counterForTrap = 0;
-    private int playerX, playerY;
+    int playerX, playerY;
 
     public Traps(GamePanel gp, Player player, Weapons weapons) {
         this.gp = gp;
@@ -78,7 +78,7 @@ public class Traps {
                 bow = bowDown;
                 settingForUpAndDownBow();
                 xBow = playerX + 2;
-                yBow = playerY + (gp.tileSize) + 2;
+                yBow = playerY + (gp.getTileSize()) + 2;
 
             }
             case "left", "neutralLeft" -> {
@@ -91,7 +91,7 @@ public class Traps {
                 bow = bowRight;
                 settingForLeftAndRightBow();
                 yBow = playerY + 2;
-                xBow = playerX + (gp.tileSize) + 2;
+                xBow = playerX + (gp.getTileSize()) + 2;
 
             }
         }
@@ -143,7 +143,8 @@ public class Traps {
         }else{
             for (Enemy enemy:
                     enemies) {
-                if(enemy.calculateHypotenuseForTrap(xArr, yArr) < 100){
+                Fight fight = new Fight(gp, player, enemy);
+                if(fight.calculateHypotenuseForTrap(xArr, yArr) < 100){
                     weapons.increaseDamageAndSetFightBooleanValueForSpecifiedEnemy(enemy);
                 }
             }

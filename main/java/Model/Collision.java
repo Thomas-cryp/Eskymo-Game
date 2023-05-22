@@ -2,9 +2,9 @@ package Model;
 
 import Controller.GamePanel;
 import Controller.TileManager;
-import entity.Enemy;
+import Controller.Enemy;
 import Controller.Entity;
-import entity.Player;
+import Controller.Player;
 
 public class Collision {
     GamePanel gp;
@@ -17,19 +17,18 @@ public class Collision {
     public Collision(GamePanel gp, Player player) {
         this.gp = gp;
         this.tileM = gp.getTileM();
-
         this.player = player;
         this.lm = new LoadMap(gp);
-        lm.loadMap("/blocks/map01.txt"); // TODO better
+        lm.loadMap("/blocks/map01.txt");
         this.mapTileNumber = lm.getMapTileNumber();
     }
     public void checkMapPosition(Entity entity, String fakeEntityDirection){
         int playerX = player.getX();
         int playerY = player.getY();
-        int leftColumn = (playerX + entity.solidArea.x) / gp.tileSize;
-        int rightColumn = (playerX + entity.solidArea.x + entity.solidArea.width) / gp.tileSize;
-        int topRow = (playerY + entity.solidArea.y) / gp.tileSize;
-        int bottomRow = (playerY + entity.solidArea.y + entity.solidArea.height) / gp.tileSize;
+        int leftColumn = (playerX + entity.solidArea.x) / gp.getTileSize();
+        int rightColumn = (playerX + entity.solidArea.x + entity.solidArea.width) / gp.getTileSize();
+        int topRow = (playerY + entity.solidArea.y) / gp.getTileSize();
+        int bottomRow = (playerY + entity.solidArea.y + entity.solidArea.height) / gp.getTileSize();
         int tileNum1, tileNum2;
 
         if (fakeEntityDirection == null){
@@ -40,7 +39,7 @@ public class Collision {
 
         switch (switchDirection) {
             case "up" -> {
-                topRow = (playerY + entity.solidArea.y - entity.speed) / gp.tileSize;
+                topRow = (playerY + entity.solidArea.y - entity.speed) / gp.getTileSize();
                 tileNum1 = mapTileNumber[leftColumn][topRow];
                 tileNum2 = mapTileNumber[rightColumn][topRow];
                 if (tileM.tile[tileNum1].collision || tileM.tile[tileNum2].collision) {
@@ -48,7 +47,7 @@ public class Collision {
                 }
             }
             case "down" -> {
-                bottomRow = (playerY + entity.solidArea.y + entity.solidArea.height + entity.speed) / gp.tileSize;
+                bottomRow = (playerY + entity.solidArea.y + entity.solidArea.height + entity.speed) / gp.getTileSize();
                 tileNum1 = mapTileNumber[leftColumn][bottomRow];
                 tileNum2 = mapTileNumber[rightColumn][bottomRow];
                 if (tileM.tile[tileNum1].collision || tileM.tile[tileNum2].collision) {
@@ -56,7 +55,7 @@ public class Collision {
                 }
             }
             case "left" -> {
-                leftColumn = (playerX + entity.solidArea.x - entity.speed) / gp.tileSize;
+                leftColumn = (playerX + entity.solidArea.x - entity.speed) / gp.getTileSize();
                 tileNum1 = mapTileNumber[leftColumn][topRow];
                 tileNum2 = mapTileNumber[leftColumn][bottomRow];
                 if (tileM.tile[tileNum1].collision || tileM.tile[tileNum2].collision) {
@@ -64,7 +63,7 @@ public class Collision {
                 }
             }
             case "right" -> {
-                rightColumn = (playerX + entity.solidArea.x + entity.solidArea.width + entity.speed) / gp.tileSize;
+                rightColumn = (playerX + entity.solidArea.x + entity.solidArea.width + entity.speed) / gp.getTileSize();
                 tileNum1 = mapTileNumber[rightColumn][topRow];
                 tileNum2 = mapTileNumber[rightColumn][bottomRow];
                 if (tileM.tile[tileNum1].collision || tileM.tile[tileNum2].collision) {
@@ -74,13 +73,13 @@ public class Collision {
         }
     }
     public boolean compareXAndYValueForCollisionBetweenPlayerAndHeart(Player player, Enemy enemy) {
-        int centerXOfPlayer = player.getX() + (gp.tileSize/2);
-        int centerYOfPlayer = player.getY() + (gp.tileSize/2);
-        int centerXOfHeart = enemy.getX() + (gp.tileSize/2);
-        int centerYOfHeart = enemy.getY() + (gp.tileSize/2);
+        int centerXOfPlayer = player.getX() + (gp.getTileSize()/2);
+        int centerYOfPlayer = player.getY() + (gp.getTileSize()/2);
+        int centerXOfHeart = enemy.getX() + (gp.getTileSize()/2);
+        int centerYOfHeart = enemy.getY() + (gp.getTileSize()/2);
 
-        if(Math.abs(centerXOfPlayer - centerXOfHeart) <= (gp.tileSize/2) && Math.abs(centerYOfPlayer - centerYOfHeart) <= (gp.tileSize/2)){
-            enemy.setdrawing(false);
+        if(Math.abs(centerXOfPlayer - centerXOfHeart) <= (gp.getTileSize()/2) && Math.abs(centerYOfPlayer - centerYOfHeart) <= (gp.getTileSize()/2)){
+            enemy.setDrawing(false);
             return true;
         }
         return false;

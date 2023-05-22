@@ -8,16 +8,13 @@ public class Threat implements Runnable{
     Thread gameThread;
     private boolean stopGameLoop = false;
 
-    public boolean isStopGameLoop() {
-        return stopGameLoop;
-    }
 
-    public void setStopGameLoop(boolean stopGameLoop) {
-        this.stopGameLoop = stopGameLoop;
-    }
 
     public Threat(GamePanel gp) {
         this.gp = gp;
+    }
+    public void setStopGameLoop(boolean stopGameLoop) {
+        this.stopGameLoop = stopGameLoop;
     }
 
     public void startGameThread(){

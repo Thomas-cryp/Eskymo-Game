@@ -4,8 +4,6 @@ import Model.BowAndArrow;
 import Model.KeyHandler;
 import Model.Traps;
 import View.DrawWeapon;
-import entity.Enemy;
-import entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,7 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class Weapons{   // TODO extends on ITEM class
+public class Weapons{
 
     GamePanel gp;
     File jsonFile;
@@ -38,11 +36,11 @@ public class Weapons{   // TODO extends on ITEM class
 
     JSONObject data;
     DrawWeapon drawWeapon;
-    Player player;
+
     boolean sword;
     boolean bow;
     boolean traps;
-    private boolean endOfArrow = false;
+
     private boolean weaponToFightPosition = false;
 
     public boolean isWeaponToFightPosition() {
@@ -57,7 +55,7 @@ public class Weapons{   // TODO extends on ITEM class
     public Weapons(GamePanel gp, Player player) {
         this.gp = gp;
         this.drawWeapon = new DrawWeapon(gp);
-        this.jsonFile = new File("JSONs/actualWeapons.json");   // TODO absolut path
+        this.jsonFile = new File("JSONs/actualWeapons.json");
         this.bowAndArrow = new BowAndArrow(gp, player, this);
         this.trapsClass = new Traps(gp, player, this);
         fileReader();
@@ -83,10 +81,6 @@ public class Weapons{   // TODO extends on ITEM class
             throw new RuntimeException(e);
         }
     }
-    public boolean isSword() {
-        sword = (boolean) data.getOrDefault("sword", false);
-        return sword;
-    }
 
     private void setSword() {
         setWeapon(true, false, false);
@@ -102,7 +96,6 @@ public class Weapons{   // TODO extends on ITEM class
         bow = (boolean) data.getOrDefault("bow", false);
         return bow;
     }
-
     private void setBow() {
         setWeapon(false, true, false);
     }

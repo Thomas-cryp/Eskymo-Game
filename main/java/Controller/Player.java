@@ -1,12 +1,9 @@
-package entity;
+package Controller;
 
-import Controller.Entity;
-import Controller.GamePanel;
 import Model.Collision;
 import Model.KeyHandler;
 import View.DrawEntity;
-import infoWidget.Hearts;
-import Controller.Weapons;
+import Model.Hearts;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,33 +15,23 @@ public class Player extends Entity {
     GamePanel gp;
 
     KeyHandler keyH;
+
+    public KeyHandler getKeyH() {
+        return keyH;
+    }
+
     DrawEntity drawEntity;
     Collision collisionChecker;
 
     Hearts hearts;
     Weapons weapons;
     private boolean attackByEnemy = false;
-    private String fakeDirectionInAttack;   //TODO better in Entity class
-
-    public void setAttackByEnemy(boolean attackByEnemy) {
-        this.attackByEnemy = attackByEnemy;
-    }
-
+    private String fakeDirectionInAttack;
     private int x;
     private int y;
     boolean isFight;
     private int timerForMovingBack;
-
     private boolean death = true;
-
-    public int getTimerToAttackKey() {
-        return timerToAttackKey;
-    }
-
-    public void setTimerToAttackKey(int timerToAttackKey) {
-        this.timerToAttackKey = timerToAttackKey;
-    }
-
     private int timerToAttackKey = 60;
 
     public Player(GamePanel gp) {
@@ -58,11 +45,6 @@ public class Player extends Entity {
         this.hearts = new Hearts(gp);
         this.collisionChecker = new Collision(gp, this);
         this.drawEntity = new DrawEntity(gp);
-
-
-    }
-    public Weapons getWeapons(){
-        return weapons;
     }
     public void callHeartsClassAndDecreaseNumberOfHearts(){
         hearts.decreaseNumberOfHearts();
@@ -75,7 +57,6 @@ public class Player extends Entity {
         y = 100;
         speed = 4;
         direction = "down";
-
         actualHearts = new int[4];
         hearts.getLengthOfHeartsAndSetArray(actualHearts.length);
         weapons.setDefaultValuesOfWeapons();
@@ -88,7 +69,6 @@ public class Player extends Entity {
             return true;
         }
     }
-
     public void getPlayerImage(){
         try{
             up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/eskimo/eskimo_up_1.png")));
@@ -108,94 +88,106 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+    private void movingPlayerAfterHit(){
 
-    public void update(){
-
-        timerToAttackKey ++;
-        if(attackByEnemy){
-            timerForMovingBack ++;
-            if(timerForMovingBack >= 30){
-                attackByEnemy = false;
-                timerForMovingBack = 0;
-                fakeDirectionInAttack = null;
-            }else{
-                collision = false;
-                collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
-
-                if(!collision){
-                    switch (direction){
-                        case "up", "neutralUp" -> {
-                            y += speed;
-                            fakeDirectionInAttack = "down";
-                        }
-                        case "down", "neutralDown" -> {
-                            y -= speed;
-                            fakeDirectionInAttack = "up";
-                        }
-                        case "left", "neutralLeft" -> {
-                            x += speed;
-                            fakeDirectionInAttack = "right";
-                        }
-                        case "right", "neutralRight" -> {
-                            x -= speed;
-                            fakeDirectionInAttack = "left";
-                        }
-                    }
-                }
-            }
-        }
-        else if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){    // it pretends moving in stay position of character
-
-            if(keyH.upPressed){// move up
-                direction = "up";
-            }if(keyH.downPressed){ // move down
-                direction = "down";
-            }if(keyH.leftPressed){ // move left
-                direction = "left";
-            }if(keyH.rightPressed){    //move right
-                direction = "right";
-            }
-
-            // collision
+        timerForMovingBack ++;
+        if(timerForMovingBack >= 30){
+            attackByEnemy = false;
+            timerForMovingBack = 0;
+            fakeDirectionInAttack = null;
+        }else{
             collision = false;
             collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
 
             if(!collision){
-                switch (direction) {
-                    case "up" -> y -= speed;
-                    case "down" -> y += speed;
-                    case "left" -> x -= speed;
-                    case "right" -> x += speed;
+                switch (direction){
+                    case "up", "neutralUp" -> {
+                        y += speed;
+                        fakeDirectionInAttack = "down";
+                    }
+                    case "down", "neutralDown" -> {
+                        y -= speed;
+                        fakeDirectionInAttack = "up";
+                    }
+                    case "left", "neutralLeft" -> {
+                        x += speed;
+                        fakeDirectionInAttack = "right";
+                    }
+                    case "right", "neutralRight" -> {
+                        x -= speed;
+                        fakeDirectionInAttack = "left";
+                    }
                 }
-
-            }
-
-            spriteCounter++;    // 60 times par second is called this method. Every 13 frames will be changed the picture
-            if(spriteCounter > 13){
-                if(spriteNum == 1){
-                    spriteNum = 2;
-                }
-                else if(spriteNum == 2) {
-                    spriteNum = 1;
-                }
-                spriteCounter = 0;
-            }
-        }else{
-            switch (direction){
-                case "up" -> direction = "neutralUp";
-                case "down" -> direction = "neutralDown";
-                case "right" -> direction = "neutralRight";
-                case "left" -> direction = "neutralLeft";
             }
         }
+    }
+    private void movingPlayerInKeyPressed(){
 
+        if(keyH.upPressed){// move up
+            direction = "up";
+        }if(keyH.downPressed){ // move down
+            direction = "down";
+        }if(keyH.leftPressed){ // move left
+            direction = "left";
+        }if(keyH.rightPressed){    //move right
+            direction = "right";
+        }
 
+        // collision
+        collision = false;
+        collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
+
+        if(!collision){
+            switch (direction) {
+                case "up" -> y -= speed;
+                case "down" -> y += speed;
+                case "left" -> x -= speed;
+                case "right" -> x += speed;
+            }
+
+        }
+
+        spriteCounter++;
+        if(spriteCounter > 13){
+            if(spriteNum == 1){
+                spriteNum = 2;
+            }
+            else if(spriteNum == 2) {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
+    }
+    private void setNeutralDirection(){
+        switch (direction){
+            case "up" -> direction = "neutralUp";
+            case "down" -> direction = "neutralDown";
+            case "right" -> direction = "neutralRight";
+            case "left" -> direction = "neutralLeft";
+        }
+    }
+    public void update(){
+
+        timerToAttackKey ++;
+        if(attackByEnemy){
+            movingPlayerAfterHit();
+        }
+        else if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){    // it pretends moving in stay position of character
+            movingPlayerInKeyPressed();
+        }else{
+            setNeutralDirection();
+        }
     }
     public void draw(Graphics g2){
         drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
         weapons.draw(g2, this);
         hearts.draw(g2);
     }
+
+
+
+
+
     public int getX() {
         return x;
     }
@@ -203,5 +195,25 @@ public class Player extends Entity {
     public int getY() {
         return y;
     }
+    public int getTimerToAttackKey() {
+        return timerToAttackKey;
+    }
 
+    public void setTimerToAttackKey(int timerToAttackKey) {
+        this.timerToAttackKey = timerToAttackKey;
+    }
+    public Weapons getWeapons(){
+        return weapons;
+    }
+    public void setAttackByEnemy(boolean attackByEnemy) {
+        this.attackByEnemy = attackByEnemy;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }

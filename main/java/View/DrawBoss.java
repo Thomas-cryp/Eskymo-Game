@@ -1,7 +1,7 @@
 package View;
 
 import Controller.GamePanel;
-import entity.Enemy;
+import Controller.Enemy;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,24 +11,24 @@ import java.util.Objects;
 
 public class DrawBoss {
     GamePanel gp;
-    private BufferedImage boss1, boss2, boss3, boss4, bossNeutral;
+    BufferedImage boss1, boss2, boss3, boss4, bossNeutral;
     private int spriteNumber = 0;
-    private int bossWidth = 80;
-    private int bossHeight = 80;
+    private final int bossWidth = 80;
+    private final int bossHeight = 80;
     private BufferedImage image;
     public DrawBoss(GamePanel gp) {
         this.gp = gp;
         loadBossImages();
     }
     public void setBossPositionAndSize(Enemy enemy){
-        int x = gp.screenWidth - (gp.tileSize * 2) - bossWidth;
-        int y = (gp.screenHeight - bossHeight)/2;
+        int x = gp.getScreenWidth() - (gp.getTileSize() * 2) - bossWidth;
+        int y = (gp.getScreenHeight() - bossHeight)/2;
         enemy.setX(x);
         enemy.setY(y);
         enemy.setDefaultX(x);
         enemy.setDefaultY(y);
     }
-    public void loadBossImages(){
+    private void loadBossImages(){
         try {
             bossNeutral = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/boss/bossNeutral.png")));
             boss1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/boss/boss1.png")));

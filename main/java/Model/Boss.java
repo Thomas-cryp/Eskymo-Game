@@ -1,7 +1,7 @@
 package Model;
 
 import Controller.GamePanel;
-import entity.Enemy;
+import Controller.Enemy;
 import Controller.Entity;
 
 import java.util.ArrayList;
