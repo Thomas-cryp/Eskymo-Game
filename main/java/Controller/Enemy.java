@@ -30,9 +30,6 @@ public class Enemy extends Entity {
     Moving moving;
     private int damage = 0;
     private boolean death = false;
-
-
-
     private int x = 400;
     private int y = 400;
     private boolean drawing = true;
@@ -48,7 +45,6 @@ public class Enemy extends Entity {
     private int spriteNum = 1;
     private int spriteCounter = 0;
     private int counterForLogger;
-
 
 
     public Enemy(GamePanel gp, Player player) {
@@ -140,7 +136,7 @@ public class Enemy extends Entity {
                 fight.setWeaponsToFightState();
             }
         }else if (fight.calculateHypotenuse() < 30 && fight.timerAfterAttackPlayerByEnemy()) {
-            player.setAttackByEnemy(true);
+
             hittingByEnemy = true;
             if(gp.isBoss()){
                 player.callHeartsClassAndDecreaseNumberOfHearts();
@@ -162,6 +158,7 @@ public class Enemy extends Entity {
                 hittingByEnemy = false;
                 timerForStandingAfterHitPlayer = 0;
             }
+            player.movingPlayerAfterHit(this);
             timerForStandingAfterHitPlayer++;
             moving.updateImageStanding();
         } else if (fight.calculateHypotenuse() < 220) {
@@ -217,6 +214,7 @@ public class Enemy extends Entity {
      * @param g2 - Graphics2D
      */
     public void draw(Graphics g2) {
+
         if(drawing && !gp.isBoss()){
             drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
             if(death){

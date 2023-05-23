@@ -44,11 +44,15 @@ public class GamePanel extends JPanel{
     private PrintWriter logWriter;
     private int gameState;
     private final int inventoryState = 3;
-    private final int pauseState = 2;
+    int pauseState = 2;
     private final int playState = 1;
     private final int mainMenu = 4;
     private final int nextLevelPage = 5;
     private final int endOfGamePage = 6;
+    private final int deathOfPlayerPage = 7;
+
+
+
     private boolean boss;
 
     public GamePanel(){
@@ -204,9 +208,14 @@ public class GamePanel extends JPanel{
             ui.paintPageWithTwoButtons(g2, "Start New Game", "Load Game");
         } else if (gameState == nextLevelPage) {
             ui.paintPageWithOneButton(g2, "Next Level");
-        } else if (gameState == endOfGamePage) {
-            ui.paintEndOfGamePage(g2, "END OF GAME");
-        } else{
+        } else if (gameState == endOfGamePage || gameState == deathOfPlayerPage) {
+            if(gameState == endOfGamePage){
+                ui.paintEndOfGamePage(g2, "END OF GAME");
+            }if(gameState == deathOfPlayerPage){
+                ui.paintEndOfGamePage(g2, "YOU DIED");
+            }
+        }
+        else{
             tileM.drawing(g2); // it has to be before player.draw
             if(!boss){
                 for (Enemy enemy : enemies) {
@@ -244,7 +253,9 @@ public class GamePanel extends JPanel{
 
 
 
-
+    public int getDeathOfPlayerPage() {
+        return deathOfPlayerPage;
+    }
     public Enemy getBossEnemy(){
         return bossEnemy;
     }
@@ -256,9 +267,6 @@ public class GamePanel extends JPanel{
     }
     public Threat getThreat() {
         return threat;
-    }
-    public int getEndOfGamePage() {
-        return endOfGamePage;
     }
     public int getNextLevelPage() {
         return nextLevelPage;

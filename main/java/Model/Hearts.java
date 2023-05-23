@@ -20,6 +20,21 @@ public class Hearts{
         this.gp = gp;
         drawLiveBar = new DrawLiveBar(gp);
     }
+    /**
+     * This method is called in Player class.
+     * It checks if player is death. Iterate through array of hearts and check if all hearts are empty.
+     * @return - true if player is death, false if not.
+     */
+    public boolean checkIfPlayerIsDeath(){
+        int counter = 0;
+        for (int i:
+             actualHeartsArray) {
+            if(i == 0){
+                counter++;
+            }
+        }
+        return counter == defaultHearts;
+    }
 
     /**
      * set array of hearts with default length. It is called from Player class when are default values set.

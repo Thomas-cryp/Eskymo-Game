@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Collision;
 import Model.KeyHandler;
+import Model.Threat;
 import View.DrawEntity;
 import Model.Hearts;
 
@@ -22,16 +23,16 @@ public class Player extends Entity {
 
     DrawEntity drawEntity;
     Collision collisionChecker;
-
+    Threat threat;
     Hearts hearts;
     Weapons weapons;
     private boolean attackByEnemy = false;
-    private String fakeDirectionInAttack;
+    private String fakeDirectionInAttack, directionOfEnemy;
     private int x;
     private int y;
     boolean isFight;
     private int timerForMovingBack;
-    private boolean death = true;
+    boolean death = true;
     private int timerToAttackKey = 60;
 
     public Player(GamePanel gp) {
@@ -45,6 +46,7 @@ public class Player extends Entity {
         this.hearts = new Hearts(gp);
         this.collisionChecker = new Collision(gp, this);
         this.drawEntity = new DrawEntity(gp);
+        this.threat = gp.getThreat();
     }
     /**
      * This method is called when the player is attacked by an enemy.
@@ -55,7 +57,7 @@ public class Player extends Entity {
 
     /**
      * set keyHandler from GamePanel class in start of new game.
-     * @param keyHandler
+     * @param keyHandler - keyHandler from GamePanel class.
      */
     public void setKeyHandler(KeyHandler keyHandler) {
         keyH = keyHandler;
@@ -110,34 +112,38 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    private void movingPlayerAfterHit(){
+    public void movingPlayerAfterHit(Enemy enemy){
 
         timerForMovingBack ++;
+        if(timerForMovingBack == 1) {
+            directionOfEnemy = enemy.getDirection();
+        }
         if(timerForMovingBack >= 30){
             attackByEnemy = false;
             timerForMovingBack = 0;
             fakeDirectionInAttack = null;
+            directionOfEnemy = null;
         }else{
             collision = false;
             collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
 
             if(!collision){
-                switch (direction){
+                switch (directionOfEnemy){
                     case "up", "neutralUp" -> {
-                        y += speed;
-                        fakeDirectionInAttack = "down";
-                    }
-                    case "down", "neutralDown" -> {
                         y -= speed;
                         fakeDirectionInAttack = "up";
                     }
-                    case "left", "neutralLeft" -> {
-                        x += speed;
-                        fakeDirectionInAttack = "right";
+                    case "down", "neutralDown" -> {
+                        y += speed;
+                        fakeDirectionInAttack = "down";
                     }
-                    case "right", "neutralRight" -> {
+                    case "left", "neutralLeft" -> {
                         x -= speed;
                         fakeDirectionInAttack = "left";
+                    }
+                    case "right", "neutralRight" -> {
+                        x += speed;
+                        fakeDirectionInAttack = "right";
                     }
                 }
             }
@@ -191,12 +197,16 @@ public class Player extends Entity {
 
     /**
      * Update every frame. It checks if player is attacked by enemy, if player is moving or not and if player is moving it checks collision.
+     * Check if player is death.
      */
     public void update(){
-
         timerToAttackKey ++;
-        if(attackByEnemy){
-            movingPlayerAfterHit();
+        if(hearts.checkIfPlayerIsDeath()){
+            gp.getLogWriter().println("Death of Player");
+            gp.getLogWriter().flush();
+            gp.setBossEnemyOnNull();
+            gp.setGameState(gp.getDeathOfPlayerPage());
+            threat.setStopGameLoop(true);
         }
         else if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){    // it pretends moving in stay position of character
             movingPlayerInKeyPressed();
@@ -235,10 +245,6 @@ public class Player extends Entity {
     public Weapons getWeapons(){
         return weapons;
     }
-    public void setAttackByEnemy(boolean attackByEnemy) {
-        this.attackByEnemy = attackByEnemy;
-    }
-
     public void setX(int x) {
         this.x = x;
     }
