@@ -32,7 +32,7 @@ public class Enemy extends Entity {
     private boolean death = false;
     private int x = 400;
     private int y = 400;
-    private boolean drawing = true;
+    private boolean drawing = false;
     private int defaultX;
     private int defaultY;
     private int playerX, playerY;
@@ -45,6 +45,8 @@ public class Enemy extends Entity {
     private int spriteNum = 1;
     private int spriteCounter = 0;
     private int counterForLogger;
+    private int distanceForClosingEnemyToPlayer;
+
 
 
     public Enemy(GamePanel gp, Player player) {
@@ -89,6 +91,11 @@ public class Enemy extends Entity {
     }
 
     private void setDefaultValuesEnemy(){
+        if(gp.isBoss()) {
+            distanceForClosingEnemyToPlayer = 700;
+        }else{
+            distanceForClosingEnemyToPlayer = 220;
+        }
         speed = 2;
         direction = "neutralDown";
         counterForLogger = 1;
@@ -154,14 +161,14 @@ public class Enemy extends Entity {
                 counterOfFreezeTime = 0;
             }
         } else if (hittingByEnemy) {
-            if (timerForStandingAfterHitPlayer == 30) {
+            if (timerForStandingAfterHitPlayer == 40) {
                 hittingByEnemy = false;
                 timerForStandingAfterHitPlayer = 0;
             }
-            player.movingPlayerAfterHit(this);
+            player.setAttackByEnemy(true, this);
             timerForStandingAfterHitPlayer++;
             moving.updateImageStanding();
-        } else if (fight.calculateHypotenuse() < 220) {
+        } else if (fight.calculateHypotenuse() < distanceForClosingEnemyToPlayer) {
             setPlayerPosition();
             moving.moveShortestPath(playerX, playerY, speed);
 
@@ -177,6 +184,9 @@ public class Enemy extends Entity {
     private void checkerOnBossAndDamage(){
         if(!gp.isBoss()){
             if(damage == 1){
+                if(!death){
+                    drawing = true;
+                }
                 death = true;
                 writeLoggerInfo("Death of Enemy");
                 if(gp.checkIfIsTimeForBoss()){
@@ -185,8 +195,7 @@ public class Enemy extends Entity {
                 }
             }
         }else{
-
-            if(damage == 1){
+            if(damage == 3){
                 death = true;
                 writeLoggerInfo("Death of Boss");
                 loaderInfoAfterDeathOfBoss();
@@ -215,15 +224,24 @@ public class Enemy extends Entity {
      */
     public void draw(Graphics g2) {
 
-        if(drawing && !gp.isBoss()){
+        if(!gp.isBoss() && !drawing) {
             drawEntity.draw(g2, direction, spriteNum, up1, up2, down1, down2, left1, left2, right1, right2, upNeutral, downNeutral, leftNeutral, rightNeutral, iceAfterHit, isFight, death, x, y);
-            if(death){
-                if(!player.checkCollisionWithHearts(this)){
-                    drawLiveBar.drawHeartAfterDeathOFEnemy(g2, this);
-                }
-            }
-        }if(gp.isBoss()){
+        }
+        if(gp.isBoss()){
             drawBoss.draw(g2, this);
+        }
+    }
+    /**
+     * draw the heart after death of the enemy. It is separate for possible to call it if enemy is death.
+     * @param g2 - Graphics2D
+     */
+    public void drawHeartAfterDeathOFEnemy(Graphics g2){
+        if(drawing){
+            if(!player.checkCollisionWithHearts(this)){
+                drawLiveBar.drawHeartAfterDeathOFEnemy(g2, this);
+            }else{
+                drawing = false;
+            }
         }
     }
 
@@ -275,9 +293,6 @@ public class Enemy extends Entity {
     }
     public void setDeath(boolean death) {
         this.death = death;
-    }
-    public void setDrawing(boolean drawing) {
-        this.drawing = drawing;
     }
     public void setDefaultX(int defaultX) {
         this.defaultX = defaultX;

@@ -2,6 +2,7 @@ package Controller;
 
 import Model.BowAndArrow;
 import Model.KeyHandler;
+import Model.Sword;
 import Model.Traps;
 import View.DrawWeapon;
 import org.json.simple.JSONObject;
@@ -21,6 +22,10 @@ public class Weapons{
     File jsonFile;
     BowAndArrow bowAndArrow;
     Traps trapsClass;
+    Sword swordClass;
+
+
+
     JSONObject data;
     DrawWeapon drawWeapon;
     boolean traps, bow;
@@ -32,6 +37,7 @@ public class Weapons{
         this.jsonFile = new File("JSONs/actualWeapons.json");
         this.bowAndArrow = new BowAndArrow(gp, player, this);
         this.trapsClass = new Traps(gp, player, this);
+        this.swordClass = new Sword(gp, player, this);
         fileReader();
     }
 
@@ -145,7 +151,9 @@ public class Weapons{
     public Traps getTraps() {
         return trapsClass;
     }
-
+    public Sword getSword() {
+        return swordClass;
+    }
     public BowAndArrow getBowAndArrow() {
         return bowAndArrow;
     }

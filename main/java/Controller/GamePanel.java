@@ -113,20 +113,21 @@ public class GamePanel extends JPanel{
      * Sets the boss enemy to null.
      */
     public void setBossEnemyOnNull() {
+        boss = false;
         this.bossEnemy = null;
     }
 
     private void setPositionOfEnemyToDoubleArray(){
         actualLevel = loader.getLevelFromJson();
         if(actualLevel == 1){
-            numberOfEnemyInLevel = 1;
+            numberOfEnemyInLevel = 3;
             enemyPositions = new int[numberOfEnemyInLevel][2];
             enemyPositions[0][0] = 400;
             enemyPositions[0][1] = 400;
-//            enemyPositions[1][0] = 500;
-//            enemyPositions[1][1] = 400;
-//            enemyPositions[2][0] = 600;
-//            enemyPositions[2][1] = 500;
+            enemyPositions[1][0] = 400;
+            enemyPositions[1][1] = 300;
+            enemyPositions[2][0] = 500;
+            enemyPositions[2][1] = 100;
             setEnemyList();
         }
         if(actualLevel == 2){
@@ -217,11 +218,14 @@ public class GamePanel extends JPanel{
         }
         else{
             tileM.drawing(g2); // it has to be before player.draw
-            if(!boss){
-                for (Enemy enemy : enemies) {
+
+            for (Enemy enemy : enemies) {
+                enemy.drawHeartAfterDeathOFEnemy(g2);
+                if(!boss){
                     enemy.draw(g2);
                 }
-            }else{
+            }
+            if(boss){
                 bossEnemy.draw(g2);
             }
             ui.draw(g2);

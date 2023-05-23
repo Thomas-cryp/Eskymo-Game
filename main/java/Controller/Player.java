@@ -27,6 +27,9 @@ public class Player extends Entity {
     Hearts hearts;
     Weapons weapons;
     private boolean attackByEnemy = false;
+
+
+    private Enemy enemyWhoAttack;
     private String fakeDirectionInAttack, directionOfEnemy;
     private int x;
     private int y;
@@ -34,6 +37,7 @@ public class Player extends Entity {
     private int timerForMovingBack;
     boolean death = true;
     private int timerToAttackKey = 60;
+
 
     public Player(GamePanel gp) {
         this.gp = gp;
@@ -112,17 +116,21 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    public void movingPlayerAfterHit(Enemy enemy){
+    private void stopMovingOfPlayer(){
+        attackByEnemy = false;
+        timerForMovingBack = 0;
+        fakeDirectionInAttack = null;
+        directionOfEnemy = null;
+        enemyWhoAttack = null;
+    }
+    public void movingPlayerAfterHit(){
 
         timerForMovingBack ++;
         if(timerForMovingBack == 1) {
-            directionOfEnemy = enemy.getDirection();
+            directionOfEnemy = enemyWhoAttack.getDirection();
         }
-        if(timerForMovingBack >= 30){
-            attackByEnemy = false;
-            timerForMovingBack = 0;
-            fakeDirectionInAttack = null;
-            directionOfEnemy = null;
+        if(timerForMovingBack >= 15){
+            stopMovingOfPlayer();
         }else{
             collision = false;
             collisionChecker.checkMapPosition(this, fakeDirectionInAttack);
@@ -200,6 +208,9 @@ public class Player extends Entity {
      * Check if player is death.
      */
     public void update(){
+        if(attackByEnemy) {
+            movingPlayerAfterHit();
+        }
         timerToAttackKey ++;
         if(hearts.checkIfPlayerIsDeath()){
             gp.getLogWriter().println("Death of Player");
@@ -209,10 +220,25 @@ public class Player extends Entity {
             threat.setStopGameLoop(true);
         }
         else if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){    // it pretends moving in stay position of character
+            stopMovingOfPlayer();
             movingPlayerInKeyPressed();
         }else{
             setNeutralDirection();
         }
+
+
+    }
+
+    /**
+     * Set attackByEnemy variable. Check if attackByEnemy is true, if it is true set enemyWhoAttack variable.
+     * @param attackByEnemy - boolean value
+     * @param enemyWhoAttackInstance - Enemy instance who attack player
+     */
+    public void setAttackByEnemy(boolean attackByEnemy, Enemy enemyWhoAttackInstance){
+        if(attackByEnemy){
+            enemyWhoAttack = enemyWhoAttackInstance;
+        }
+        this.attackByEnemy = attackByEnemy;
     }
     /**
      * Draw player's image.
@@ -225,9 +251,9 @@ public class Player extends Entity {
     }
 
 
-
-
-
+    public boolean isAttackByEnemy() {
+        return attackByEnemy;
+    }
     public int getX() {
         return x;
     }
