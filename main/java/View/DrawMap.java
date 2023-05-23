@@ -1,23 +1,30 @@
 package View;
 
 import Controller.GamePanel;
-import Model.tile.LoadMap;
-import Model.tile.Tile;
-import Model.tile.TilesImport;
+
+import Model.LoadMap;
+import Controller.Tile;
+import Model.TilesImport;
 
 import java.awt.*;
 import java.util.Objects;
 
-public class DrawMap extends TilesImport{
+public class DrawMap{
     GamePanel gp;
     LoadMap lm;
 
     TilesImport ti;
     Tile[] tile;
 
+    /**
+     * Draws the map form the mapTileNumber two dimensional array
+     * @param g2 Graphics2D
+     * @param gp GamePanel
+     * @param mapTileNumber int[][]
+     */
     public void draw(Graphics2D g2, GamePanel gp, int[][] mapTileNumber){
         this.gp = Objects.requireNonNull(gp, "Game Panel cannot be null");
-        lm = new LoadMap();
+        lm = new LoadMap(gp);
         ti = new TilesImport();
         tile = ti.getTileImage();
 
@@ -27,17 +34,17 @@ public class DrawMap extends TilesImport{
         int y = 0;
 
 
-        while(col < gp.maxScreenColumn && row < gp.maxScreenRow){
+        while(col < gp.getMaxScreenColumn() && row < gp.getMaxScreenRow()){
 
             int tileNumber = mapTileNumber[col][row];
-            g2.drawImage(tile[tileNumber].image, x, y, gp.tileSize, gp.tileSize, null);
-            x += gp.tileSize;
+            g2.drawImage(tile[tileNumber].image, x, y, gp.getTileSize(), gp.getTileSize(), null);
+            x += gp.getTileSize();
             col ++;
 
-            if(col == gp.maxScreenColumn){
+            if(col == gp.getMaxScreenColumn()){
                 col = 0;
                 x = 0;
-                y += gp.tileSize;
+                y += gp.getTileSize();
                 row ++;
             }
 

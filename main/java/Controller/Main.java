@@ -3,6 +3,10 @@ package Controller;
 import javax.swing.*;
 
 public class Main {
+    /**
+     * Main method to run the game
+     * @param args - arguments
+     */
     public static void main(String[] args) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // close the window when user click on close button
@@ -16,6 +20,6 @@ public class Main {
         window.setLocationRelativeTo(null); // window will be at the center of the screen
         window.setVisible(true);    // window will be visible
 
-        gamePanel.startGameThread();
+        gamePanel.startGameWithGameState();
     }
 }
