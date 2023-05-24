@@ -133,18 +133,16 @@ public class GamePanel extends JPanel{
         if(actualLevel == 2){
             enemies.clear();
             setBoss(false);
-            numberOfEnemyInLevel = 2;
+            numberOfEnemyInLevel = 4;
             enemyPositions = new int[numberOfEnemyInLevel][2];
             enemyPositions[0][0] = 400;
-            enemyPositions[0][1] = 400;
-            enemyPositions[1][0] = 500;
-            enemyPositions[1][1] = 400;
-//            enemyPositions[2][0] = 600;
-//            enemyPositions[2][1] = 500;
-//            enemyPositions[3][0] = 500;
-//            enemyPositions[3][1] = 500;
-//            enemyPositions[4][0] = 500;
-//            enemyPositions[4][1] = 400;
+            enemyPositions[0][1] = 100;
+            enemyPositions[1][0] = 100;
+            enemyPositions[1][1] = 300;
+            enemyPositions[2][0] = 600;
+            enemyPositions[2][1] = 100;
+            enemyPositions[3][0] = 400;
+            enemyPositions[3][1] = 400;
             setEnemyList();
         }
 
