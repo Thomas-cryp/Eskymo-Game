@@ -80,9 +80,10 @@ public class DrawEntity {
         }
 
 
-            g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null);
+
             if(isFight && !death){
                 g2.drawImage(iceAfterHit, x, y, gp.getTileSize(), gp.getTileSize(), null);
             }
+            g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null);
     }
 }

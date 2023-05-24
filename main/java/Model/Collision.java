@@ -90,7 +90,6 @@ public class Collision {
         int centerYOfHeart = enemy.getY() + (gp.getTileSize()/2);
 
         if(Math.abs(centerXOfPlayer - centerXOfHeart) <= (gp.getTileSize()/2) && Math.abs(centerYOfPlayer - centerYOfHeart) <= (gp.getTileSize()/2)){
-            enemy.setDrawing(false);
             return true;
         }
         return false;
